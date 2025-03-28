@@ -194,7 +194,7 @@
           {% endunless %}
         {% endif %}
 
-      {% comment %}{%- elsif current_product.price < current_product.compare_at_price -%} {% endcomment %}
+      {%- elsif current_product.price < current_product.compare_at_price -%}
         {% unless has_no_varaint %}
           <span class="price">
             {% if settings.currency_code_enabled %}

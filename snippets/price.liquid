@@ -32,7 +32,9 @@
     endif
   endif
 %}
- 
+ <script>
+   console.log(money_price)
+   </script>
 <div class="product-price__wrapper {{ container_class | default: '' }}">
   <div class="product-price_top {% if product.selected_or_first_available_variant.unit_price -%} add-bottom-spacing {%- endif -%}">
     {%- if use_variant -%}

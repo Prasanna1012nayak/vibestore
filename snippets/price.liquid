@@ -129,7 +129,7 @@
       {%- if  segment_price < price   or compare_at_price > price and product.quantity_price_breaks_configured? != true %} price--on-sale{% endif -%}
       </span>
       {%- if on_sale %}
-        {% if compare_at_price %}
+        {% if compare_at_price  < price %}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
               {{ current_product.compare_at_price | money_with_currency }}

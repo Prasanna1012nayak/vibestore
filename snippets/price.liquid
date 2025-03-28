@@ -82,6 +82,7 @@
       {% if current_product.price_varies and compare_at_price %}
         {%- assign cheapest_variant = product.variants | sort: 'price' | first -%}
         <span class="price">
+             {%- if  segment_price < price   or compare_at_price > price and product.quantity_price_breaks_configured? != true %} price--on-sale{% endif -%}
           {%- capture price_min -%}
             {%- if settings.currency_code_enabled -%}
               {{- cheapest_variant.price | money_with_currency -}}

@@ -45,7 +45,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      const priceDisplay = document.querySelector('.price-item--regular');
+      const priceDisplay = document.querySelector('.price');
       console.log("-----------------------------------------", pric)
       if (priceDisplay && !priceDisplay.hasAttribute('data-original-price')) {
         priceDisplay.setAttribute('data-original-price', priceDisplay.textContent.trim());

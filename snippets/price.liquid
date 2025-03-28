@@ -40,10 +40,14 @@
 
       {% comment %} For Price to be render on products page /Featured product {% endcomment %}
       <span class="price">
+        {% if segment_price  %}
+        {{ money_price }}
+        {% else %}
         {% if settings.currency_code_enabled %}
           {{ current_product.price | money_with_currency }}
         {% else %}
           {{ current_product.price | money }}
+        {% endif %}
         {% endif %}
       </span>
       {%- if on_sale %}

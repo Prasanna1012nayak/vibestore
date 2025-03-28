@@ -1,0 +1,50 @@
+{% comment %}
+  Variable used:
+  block : {{Object}} Block object
+{% endcomment %}
+<accordion-tab>
+  <details
+    accordionTab
+    aria-expanded="false"
+    class="accordion__item d-block"
+    {{ block.shopify_attributes }}
+    {% if block.settings.block_bottom_spacing %}
+      style="margin-bottom: {{ block.settings.block_bottom_spacing | append: 'px' }}"
+    {% endif %}
+  >
+    <summary aria-label="{{ block.settings.heading | default: block.settings.page.title }}">
+      <div class="accordion__item__head">
+        <p>{{ block.settings.heading | default: block.settings.page.title }}</p>
+      </div>
+    </summary>
+    <div accordionBody class="accordion__item__body">
+      <div class="accordion__item__body-content">
+        <div class="RTE-content">
+          {{ block.settings.content }}
+          {{ block.settings.page.content }}
+        </div>
+        {% if block.settings.image %}
+          {%- capture sizes -%}
+            {%- unless section.settings.full_width -%}
+              (min-width: {{ page_width }}px) 780px,
+              (min-width: 768px) calc({{ imageWidth }} - 50px), calc(100vw - 100px)
+              {%- else -%}
+              (min-width: 768px) calc({{ imageWidth }} - 50px), calc(100vw - 100px)
+            {%- endunless -%}
+          {%- endcapture -%}
+          {% assign widths = '500, 780, 1060, 1280, 1440' %}
+          <div
+            class="accordion__item__image"
+            style="--desktop-image-width:{{ block.settings.desktop_image_width | append: '%' }}; --mobile-image-width: {{ block.settings.mobile_image_width | append: '%' }}"
+          >
+            {{
+              block.settings.image
+              | image_url: width: block.settings.image.width
+              | image_tag: sizes: sizes, widths: widths, class: 'accordion-image image--aspectSize'
+            }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </details>
+</accordion-tab>

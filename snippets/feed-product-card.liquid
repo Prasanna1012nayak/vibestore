@@ -1,0 +1,61 @@
+{% comment %}
+  Params Used:
+  product: @object - Gets you which product object
+{% endcomment %}
+
+{%- liquid
+    assign on_sale = false
+    if product.compare_at_price > product.price
+      assign on_sale = true
+    endif
+  -%}
+  
+    <product-card product-handle="{{ product.handle }}" product-id="{{ product.selected_or_first_available_variant.id }}">
+      <div class="d-flex shoppable__feed--product">
+        <div class="position-relative shoppable__feed--product--image">
+          {% comment %} Image {% endcomment %}
+          <div class="image--aspectSize">
+            {%- if product.featured_media -%}
+              {{
+                product.featured_media
+                | image_url: width: product.featured_media.width
+                | image_tag:
+                  widths: '141, 57',
+                  sizes: '(max-width: 767) 57px',
+                  alt: product.featured_media.alt,
+                  loading: 'lazy',
+                  class: 'image-responsive object-fit-contain'
+              }}
+            {% else %}
+              <div class="product-cart-no-image-container">
+                <div class="product-cart-no-image"></div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+        <div class="w-100 shoppable__feed--product--info d-flex d-flex-dir-c">
+          {% comment %} Title {% endcomment %}
+          {% form 'product', product, class: 'product-card-item__form' %}
+            <input
+              name="id"
+              type="hidden"
+              value="{{ product.first_available_variant.id }}"
+            >
+            <input
+              name="quantity"
+              type="hidden"
+              value="1"
+            >
+            <button class="cursor-pointer fnt-16 button-rest-styles text-color"  toggle-element="options-drawer" type="submit">{{ product.title }}</button>
+            <!-- form content -->
+          {% endform %}
+          
+          <div class="d-flex justify-content-space-btw mt-12 fnt-14 text-color">
+            {% comment %} Price {% endcomment %}
+            {% render 'price', product: product, on_sale: on_sale, hide_percentage_off: true %}
+            {% comment %} Product form {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </product-card>
+  

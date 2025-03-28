@@ -1,0 +1,57 @@
+{% comment %}  {% endcomment %}
+
+{%- case arrow_direction -%}
+  {%- when 'right' -%}
+    <div
+      class="arrow-container"
+    >
+      <div class="arrow-wrap">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="11"
+          viewBox="0 0 18 11"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M12.0859 0.490234L16.7904 5.19473L12.0859 9.89933" stroke="var(--color-navigation-arrow)"/>
+          <path d="M16.5859 5.19727H0.426758" stroke="var(--color-navigation-arrow)"/>
+        </svg>
+      </div>
+    </div>
+
+  {%- when 'left' -%}
+    <div
+      class="arrow-container"
+    >
+      <div class="arrow-wrap">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="11"
+          viewBox="0 0 18 11"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M6.13272 0.490234L1.42822 5.19473L6.13272 9.89933" stroke="var(--color-navigation-arrow)"/>
+          <path d="M1.63281 5.19727H17.7919" stroke="var(--color-navigation-arrow)"/>
+        </svg>
+      </div>
+    </div>
+  {%- when 'right-2' -%}
+    <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24.4116" cy="24.2143" r="23.7143" fill="white" fill-opacity="0.7" stroke="#8B8B8B"/>
+      <path d="M22.3961 18.1326L28.9541 24.6906L22.3961 31.2486" stroke="#8B8B8B" stroke-width="2.01786"/>
+    </svg>
+
+  {%- when 'left-2' -%}
+    <svg width="50" height="49" viewBox="0 0 50 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M48.6973 24.2143C48.6973 37.3039 37.9154 47.9286 24.5986 47.9286C11.2819 47.9286 0.5 37.3039 0.5 24.2143C0.5 11.1246 11.2819 0.5 24.5986 0.5C37.9154 0.5 48.6973 11.1246 48.6973 24.2143Z" fill="white" fill-opacity="0.7" stroke="#8B8B8B"/>
+      <path d="M26.8096 18.1326L20.1475 24.6906L26.8096 31.2486" stroke="#8B8B8B" stroke-width="2.01786"/>
+    </svg>
+
+  {%- else %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="9" viewBox="0 0 17 9" fill="none">
+      <path d="M1 8.5L8.5 0.999999L16 8.5" stroke="var(--color-navigation-arrow)"/>
+    </svg>
+{%- endcase -%}

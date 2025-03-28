@@ -1,0 +1,68 @@
+{% liquid
+  assign price = product.price
+  assign product_on_sale_text = 'products.product.on_sale' | t
+  assign remaining_count = 2
+  if show_custom_badges
+    assign discount_formate = settings.sale_badge_format
+  else
+    assign discount_formate = settings.discount_format
+  endif
+%}
+
+{%- case discount_formate -%}
+  {%- when 'sale' -%}
+    {% comment %} Show Out of stock badge {% endcomment %}
+    {% unless hide_badges %}
+      {% if show_custom_badges %}
+        {% if settings.show_sale_badge %}
+          {% assign remaining_count = 1 %}
+          <span class="p_badge on_sale">{{ product_on_sale_text }}</span>
+        {% endif %}
+      {% else %}
+        <span class="discount-text">{{ product_on_sale_text }}</span>
+      {% endif %}
+    {% endunless %}
+
+  {%- when 'percent' -%}
+    {%- assign discount_value = product.compare_at_price
+      | minus: price
+      | times: 100.0
+      | divided_by: product.compare_at_price
+      | ceil
+    -%}
+    {% if show_custom_badges %}
+      {% if settings.show_sale_badge %}
+        {% assign remaining_count = 1 %}
+        <span class="p_badge on_sale">{{ discount_value }}% OFF</span>
+      {% endif %}
+    {% else %}
+      <span class="discount-text">{{ discount_value }}% OFF</span>
+    {% endif %}
+  {%- when 'difference' -%}
+    {%- assign diff = product.compare_at_price | minus: product.price -%}
+    {% if show_custom_badges %}
+      {% if settings.show_sale_badge %}
+        {% assign remaining_count = 1 %}
+        <span class="p_badge on_sale">
+          {% if settings.currency_code_enabled %}
+            - {{ diff | money_with_currency }}
+          {% else %}
+            - {{ diff | money }}
+          {% endif %}
+        </span>
+      {% endif %}
+    {% else %}
+      <span class="discount-text">
+        {% if settings.currency_code_enabled %}
+          - {{ diff | money_with_currency }}
+        {% else %}
+          - {{ diff | money }}
+        {% endif %}
+      </span>
+    {% endif %}
+{%- endcase -%}
+{% unless hide_badges %}
+  {% if show_custom_badges %}
+    {% render 'product-tags-badges', current_product: current_product, remaining_count: remaining_count %}
+  {% endif %}
+{% endunless %}

@@ -1,0 +1,18 @@
+animation-reveal {
+  display: block;
+}
+
+[aoi-type=fade-up] > *,
+[aoi-type=slide-right] > *,
+.swiper-slide-prev [aoi-type=scale] > *,
+.swiper-slide-next [aoi-type=scale] > *,
+[aoi-type=stagger] > *,
+.swiper-slide-prev [aoi-type=stagger] > *,
+.swiper-slide-next [aoi-type=stagger] > *,
+[aoi-type=fade-in] > * {
+  opacity: 0;
+}
+
+[aoi-type=scale] > * {
+  transform: scale(1.3);
+}

@@ -1,0 +1,165 @@
+
+
+<product-zoom-drawer
+  aria-live="polite"
+  aria-modal="true"
+  aria-label="{{ 'general.drawer.image_zoom_gallery.drawer_text' | t }}"
+  class="d-block drawer color-{{ settings.drawer_color_scheme }} product-zoom__drawer "
+  drawer-type="product-zoom-{{ section.id }}"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="drawer__container">
+    <div class="drawer__overlay" >
+        <div class="drawer__overlay__media--wrapper position-relative w-100 h-100" drawer-overlay>
+            <div class="drawer__overlay__main--media w-100 h-100 position-absolute">
+                 <product-zoom-carousel
+                verticle-thumbnail="true"
+              intersection-element
+              class="d-none js-element h-100 product-zoom__carousel product-slider--{{ section.settings.display_options_layout }}"
+              slide-layout-type="carousel"
+              slide-pagination-type="bullets"
+              slide-per-view="1"
+              slide-responsive-breakpoints='{"320":{"slidesPerView": "1"},"640":{"slidesPerView":"1"}}'
+              thumbnail-responsive-breakpoints='{"769":{"slidesPerView": "3","direction": "vertical"},"768":{"slidesPerView":"6", "direction": "horizontal"},"520":{"slidesPerView":"6", "direction": "horizontal"}, "320":{"slidesPerView":"4"}}'
+              slide-speed="500"
+              slide-thumnail-slider-id="thumnail-product-slider--{{ section.id }}"
+              {%- if product_feature_media_id -%}
+                slide-to-media="{{ product_feature_media_id | escape }}"
+              {%- endif -%}
+              space-between="22"
+            >
+              <div class="swiper">
+                <div class="swiper-container h-100 product-main-slide-container" main-slider>
+                  <div class="swiper-wrapper h-100 ">
+                    {% if product_first_media.media_type == 'image' %}
+                      <div class="swiper-slide">
+                        <div class="swiper-zoom-container">
+                          <img
+                            src="{{ product_first_media | image_url: width: product_first_media.width }}"
+                            alt="{{ product_first_media.alt }}"
+                            loading="lazy"
+                            class="image-responsive object-fit-contain"
+                            width="{{ product_first_media.width }}"
+                            height="{{ product_first_media.height }}"
+                          >
+                          <div class="product-zoom__carousel-preloader" zoom-lazy-load-spinner></div>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% for media in medias %}
+                      {%- if media.media_type == 'image' -%}
+                        {% if media.id != product_feature_media_id %}
+                          <div class="swiper-slide">
+                            <div class="swiper-zoom-container">
+                              <img
+                                src="{{ media | image_url: width: media.width }}"
+                                alt="{{ media.alt }}"
+                                loading="lazy"
+                                class="image-responsive object-fit-contain"
+                                width="{{ media.width }}"
+                                height="{{ media.height }}"
+                              >
+                              <div class="product-zoom__carousel-preloader" zoom-lazy-load-spinner></div>
+                            </div>
+                          </div>
+                        {% endif %}
+                      {%- endif -%}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div slider-controller>
+                <div class="dash_arrows ">
+                  <!-- Next Arrow -->
+                  <div
+                    class="slideshow__next sliderPagination__next"
+                    slide-next
+                    role="button"
+                    tabindex="0"
+                    aria-label="{{ 'accessibility.next_slide_label' | t }}"
+                  >
+                    {% render 'slider-arrow-icon', arrow_direction: 'right' %}
+                  </div>
+
+                  <!-- Previous Arrow -->
+                  <div
+                    class="slideshow__prev sliderPagination__prev"
+                    slide-prev
+                    role="button"
+                    tabindex="0"
+                    aria-label="{{ 'accessibility.prev_slide_label' | t }}"
+                  >
+                    {% render 'slider-arrow-icon', arrow_direction: 'left' %}
+                  </div>
+                </div>
+              </div>
+            </product-zoom-carousel>
+            </div>
+        </div>
+    </div>
+    <div class="drawer__wrapper drawer__wrapper--animation-position-right drawer__wrapper--animation-postion-bottom-from-tablet">
+      {% comment %} Drawer Header Area {% endcomment %}
+      <div class="drawer__header align-item-center" drawer-header>
+        <button
+          aria-label="{{ 'accessibility.close_drawer' | t }} {{ 'section.quiz.drawer_text' | t }}"
+          class="drawer__close__btn"
+          close-drawer
+          tabindex="0"
+        >
+          {%- render 'icon' with 'close-drawer' -%}
+        </button>
+        <h3 class="drawer__head h2">{{ 'general.drawer.image_zoom_gallery.drawer_text' | t }}</h3>
+      </div>
+
+      {% comment %} Drawer Content/Body area {% endcomment %}
+      <div class="drawer__body">
+        <div class="drawer__body__wrapper h-100">
+             <div class="body__wrapper__slide body__wrapper-box h-100">
+                <div class="swiper ">
+                    <div class="swiper-container" id="thumnail-product-slider--{{ section.id }}">
+                        <div class="swiper-wrapper">
+                            {% if product_first_media.media_type == 'image' %}
+                              <div class="swiper-slide">
+                                  <div class="position-relative aspect-ratio-square block-border-radius h-100">
+                                    <img
+                                      src="{{ product_first_media | image_url: width: product_first_media.width }}"
+                                      alt="{{ product_first_media.alt }}"
+                                      loading="lazy"
+                                      class="image-responsive object-fit-cover"
+                                      width="300"
+                                      height="auto"
+                                    >
+                                  </div>
+                              </div>
+                            {% endif %}
+                            {% for media in medias %}
+                                {%- if media.media_type == 'image' -%}
+                                    {% if media.id != product_feature_media_id %}
+                                        <div class="swiper-slide ">
+                                          <div class="position-relative aspect-ratio-square block-border-radius h-100" >
+                                              <img
+                                            src="{{ media | image_url: width: media.width }}"
+                                              alt="{{ media.alt }}"
+                                              loading="lazy"
+                                              class="image-responsive object-fit-cover"
+                                              width="300"
+                                              height="auto"
+                                          >
+                                        </div>
+                                      </div>
+                                    {%  endif %}
+                                {%- endif -%}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Additional required wrapper -->
+                </div>
+             </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</product-zoom-drawer>

@@ -44,7 +44,7 @@
       {% comment %} For Price to be render on products page /Featured product {% endcomment %}
       {%- if segment_price -%}
   <span id="meta-field" data-value="{{ product.selected_or_first_available_variant.metafields.netwise.catalog_price.value[customer.metafields.netwise.segment.value].volumePricing | json | escape }}" hidden></span>
-
+ <script>
   document.addEventListener('DOMContentLoaded', function () {
   const priceDisplay = document.querySelector('.price');
   if (!priceDisplay) {
@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+ </script>
 
 {%- endif -%}
       <span class="price">

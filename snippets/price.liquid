@@ -221,9 +221,9 @@
         {%- if on_sale %}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
-              {{ current_product.compare_at_price | money_with_currency }}
+             222 {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-              {{ current_product.compare_at_price | money }}
+             444 {{ current_product.compare_at_price | money }}
             {% endif %}
           </del>
           {% unless hide_percentage_off %}

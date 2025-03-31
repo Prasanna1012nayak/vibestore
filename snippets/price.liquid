@@ -134,7 +134,11 @@
             {% if settings.currency_code_enabled %}
            555   {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
+              {% if true %}
+                nhj
+                {% else %}
            666   {{ current_product.compare_at_price | money }}
+            {% endif %}
             {% endif %}
           </del>
           {% unless hide_percentage_off %}

@@ -32,7 +32,7 @@
     endif
   endif
 %}
-<div> {{ compare_at_price| json }} </div>
+<div> {{ current_product.compare_at_price| json }} </div>
  <script>
    console.log(money_price)
    </script>
@@ -124,7 +124,7 @@
         {% if settings.currency_code_enabled %}
           {{ current_product.price | money_with_currency }}
         {% else %}
-          {{ current_product.price | money }}
+          {{ segment_price < current_product.price | money }}
         {% endif %}
         {% endif %}
       {%- if on_sale %}

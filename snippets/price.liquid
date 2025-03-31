@@ -134,8 +134,8 @@
             {% if settings.currency_code_enabled %}
            555   {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-              {% if true %}
-               {{ segment_price < current_product.compare_at_price }}  
+              {% if segment_price < current_product.compare_at_price %}
+                 {{ product.price | money_with_currency }}
                 {% else %}
            666   {{ current_product.compare_at_price | money }}
             {% endif %}

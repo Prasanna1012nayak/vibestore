@@ -124,7 +124,7 @@
         {% if settings.currency_code_enabled %}
           {{ current_product.price | money_with_currency }}
         {% else %}
-          {{ segment_price < current_product.price | money }}
+          {{ < current_product.price | money }}
         {% endif %}
         {% endif %}
       {%- if on_sale %}

@@ -32,13 +32,13 @@
     endif
   endif
 %}
-<div class="product-price__wrapper {{ container_class | default: '' }}">
+<div class="product-price__wrapper {{ container_class | default: '' }}"> {{ segment.price | json }}
   <div class="product-price_top {% if product.selected_or_first_available_variant.unit_price -%} add-bottom-spacing {%- endif -%}">
     {%- if use_variant -%}
       {% comment %} Logic for prices to render on single product when known Variant {% endcomment %}
 
       {% comment %} For Price to be render on products page /Featured product {% endcomment %}
-      <span class="price">
+      hii<span class="price">
         {% if segment_price  %}
         {{ money_price }}
         {% else %}
@@ -54,7 +54,7 @@
             {% if settings.currency_code_enabled %}
               {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-              {% if segment_price < current_product.compare_at_price %}
+             666 {% if segment_price < current_product.compare_at_price %}
                  {{ product.price | money_with_currency }}
                 {% else %}
               {{ current_product.compare_at_price | money }}
@@ -82,99 +82,6 @@
       {% endif %}
 
     {%- else -%}
-      {%- if segment_price -%}
-        <span id="meta-field" data-value="{{ product.selected_or_first_available_variant.metafields.netwise.catalog_price.value[customer.metafields.netwise.segment.value].volumePricing | json | escape }}" hidden></span>
-      
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener("DOMContentLoaded", function () {
-              let customerSegment = "{{ customer.metafields.netwise.segment.value }}"; // Get segment
-            
-              document.querySelectorAll(".search-item").forEach((item) => {
-                let segmentPrice = item.querySelector(".segment-price");
-                let regularPrice = item.querySelector(".regular-price");
-            
-                if (customerSegment !== "draft" && segmentPrice) {
-                  regularPrice.style.display = "none"; // Hide regular price if segment price is available
-                  segmentPrice.style.display = "block";
-                }
-              });
-            });
-            
-      
-            const priceDisplay = document.querySelector('.price');
-            //console.log("-----------------------------------------", pric)
-            if (priceDisplay && !priceDisplay.hasAttribute('data-original-price')) {
-              priceDisplay.setAttribute('data-original-price', priceDisplay.textContent.trim());
-            }
-          
-            const metaFieldElement = document.getElementById('meta-field');
-            const metaFieldValue = metaFieldElement.getAttribute('data-value');
-            let quantity = 1; 
-      
-            const decodedValue = metaFieldValue
-              .replace(/&quot;/g, '"')
-              .replace(/&#39;/g, "'");
-            const parsedData = JSON.parse(decodedValue);
-          
-            const getUnitPrice = (qty) => {
-      
-              const sortedPricing = parsedData.sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
-          
-              const minQuantity = parseInt(sortedPricing[sortedPricing.length - 1].quantity);
-      
-              if (qty < minQuantity) {
-                console.log(`Quantity is below the minimum of ${minQuantity}. Restoring original price.`);
-                return null;
-              }
-          
-              let selectedPrice = null;
-              for (let tier of sortedPricing) {
-                if (qty >= parseInt(tier.quantity)) {
-                  selectedPrice = parseFloat(tier.price);
-                  break;
-                }
-              }
-              console.log (selectedPrice);
-              return selectedPrice;
-             
-            };
-            
-      
-            const updateDisplay = (price) => {
-              if (priceDisplay) {
-                if (price !== null) {
-                  // Inject the volume price per item
-                  priceDisplay.textContent = `$${price.toFixed(2)}`;
-                } else {
-                  // Restore the original price from the data attribute
-                  const originalPrice = priceDisplay.getAttribute('data-original-price');
-                  priceDisplay.textContent = originalPrice;
-                }
-              }
-              console.log(price);
-            };
-          
-            document.addEventListener('click', (event) => {
-              if (event.target.closest('.quantity__button')) {
-                const quantityInput = event.target.closest('quantity-input').querySelector('.quantity__input');
-                quantity = parseInt(quantityInput.value);
-                const pricePerItem = getUnitPrice(quantity);
-                updateDisplay(pricePerItem);
-              }
-            });
-          
-            document.addEventListener('input', (event) => {
-              if (event.target.matches('.quantity__input')) {
-                quantity = parseInt(event.target.value);
-                const pricePerItem = getUnitPrice(quantity);
-                updateDisplay(pricePerItem);
-              }
-            });
-          });
-          
-        </script>
-      {%- endif -%}
       {% comment %} For price to be render on product card considering rendering prices of variant which are different {% endcomment %}
 
       {% comment %} 1) if price varies between varaints and has compare price {% endcomment %}
@@ -195,9 +102,9 @@
         {%- if on_sale %}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
-            qqqqq  {{ cheapest_variant.compare_at_price | money_with_currency }}
+         {{ cheapest_variant.compare_at_price | money_with_currency }}
             {% else %}
-            1111  {{ cheapest_variant.compare_at_price | money }}
+             {{ cheapest_variant.compare_at_price | money }}
             {% endif %}
           </del>
           {% unless hide_percentage_off %}
@@ -238,9 +145,9 @@
         {%- if on_sale %}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
-             222 {{ current_product.compare_at_price | money_with_currency }}
+              {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-             444 {{ current_product.compare_at_price | money }}
+              {{ current_product.compare_at_price | money }}
             {% endif %}
           </del>
           {% unless hide_percentage_off %}

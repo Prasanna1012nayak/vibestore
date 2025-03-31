@@ -78,68 +78,72 @@
             
               let quantity = 1;
             
-              try {
-                const decodedValue = metaFieldValue
-                  .replace(/&quot;/g, '"')
-                  .replace(/&#39;/g, "'");
-                const parsedData = JSON.parse(decodedValue);
+                  const decodedValue = metaFieldValue
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'");
+                  const parsedData = JSON.parse(decodedValue);
+                
+                  const getUnitPrice = (qty) => {
             
-                const getUnitPrice = (qty) => {
-                  const sortedPricing = parsedData.sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
-                  const minQuantity = parseInt(sortedPricing[sortedPricing.length - 1].quantity);
+                    const sortedPricing = parsedData.sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
+                
+                    const minQuantity = parseInt(sortedPricing[sortedPricing.length - 1].quantity);
             
-                  if (qty < minQuantity) {
-                    return null;
-                  }
-            
-                  let selectedPrice = null;
-                  for (let tier of sortedPricing) {
-                    if (qty >= parseInt(tier.quantity)) {
-                      selectedPrice = parseFloat(tier.price);
-                      break;
+                    if (qty < minQuantity) {
+                      console.log(`Quantity is below the minimum of ${minQuantity}. Restoring original price.`);
+                      return null;
                     }
-                  }
-                  return selectedPrice;
-                };
-            
-                const updateDisplay = (price) => {
-                  if (price !== null) {
-                    priceDisplay.textContent = `$${price.toFixed(2)}`;
-                  } else {
-                    priceDisplay.textContent = priceDisplay.getAttribute("original-price");
-                  }
-                };
-            
-                const handleQuantityChange = (inputField) => {
-                  quantity = parseInt(inputField.value) || 1;
-                  const pricePerItem = getUnitPrice(quantity);
-                  updateDisplay(pricePerItem);
-                };
-            
-                // Event Listeners
-                document.addEventListener("click", (event) => {
-                  const button = event.target.closest(".quantity__button");
-                  if (button) {
-                    const quantityInput = button.closest(".quantity-input").querySelector(".quantity__input");
-                    if (quantityInput) {
-                      handleQuantityChange(quantityInput);
+                
+                    let selectedPrice = null;
+                    for (let tier of sortedPricing) {
+                      if (qty >= parseInt(tier.quantity)) {
+                        selectedPrice = parseFloat(tier.price);
+                        break;
+                      }
                     }
-                  }
+                    console.log (selectedPrice);
+                    return selectedPrice;
+                   
+                  };
+                  
+            
+                  const updateDisplay = (price) => {
+                    if (priceDisplay) {
+                      if (price !== null) {
+                        // Inject the volume price per item
+                        priceDisplay.textContent = `$${price.toFixed(2)}`;
+                      } else {
+                        // Restore the original price from the data attribute
+                        const originalPrice = priceDisplay.getAttribute('data-original-price');
+                        priceDisplay.textContent = originalPrice;
+                      }
+                    }
+                    console.log(price);
+                  };
+                
+                  document.addEventListener('click', (event) => {
+                    if (event.target.closest('.quantity__button')) {
+                      const quantityInput = event.target.closest('quantity-input').querySelector('.quantity__input');
+                      quantity = parseInt(quantityInput.value);
+                      const pricePerItem = getUnitPrice(quantity);
+                      updateDisplay(pricePerItem);
+                    }
+                  });
+                
+                  document.addEventListener('input', (event) => {
+                    if (event.target.matches('.quantity__input')) {
+                      quantity = parseInt(event.target.value);
+                      const pricePerItem = getUnitPrice(quantity);
+                      updateDisplay(pricePerItem);
+                    }
+                  });
                 });
-            
-                document.addEventListener("input", (event) => {
-                  if (event.target.matches(".quantity__input")) {
-                    handleQuantityChange(event.target);
-                  }
-                });
-            
-              } catch (error) {
-                console.error("Error parsing meta field value:", error);
-              }
-            });
-            
+                
+              </script>
+            {%- endif -%}
             
           </script>
+        
         {%- endif -%}
       {%- if on_sale %}
         {% if compare_at_price %}

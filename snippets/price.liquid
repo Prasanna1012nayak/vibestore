@@ -32,7 +32,7 @@
     endif
   endif
 %}
-<div class="product-price__wrapper {{ container_class | default: '' }}"> {{ segment.price | json }}
+<div class="product-price__wrapper {{ container_class | default: '' }}">
   <div class="product-price_top {% if product.selected_or_first_available_variant.unit_price -%} add-bottom-spacing {%- endif -%}">
     {%- if use_variant -%}
       {% comment %} Logic for prices to render on single product when known Variant {% endcomment %}
@@ -54,7 +54,7 @@
             {% if settings.currency_code_enabled %}
               {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-             666 {% if segment_price < current_product.compare_at_price %}
+             {% if segment_price < current_product.compare_at_price %}
                  {{ product.price | money_with_currency }}
                 {% else %}
               {{ current_product.compare_at_price | money }}
@@ -189,12 +189,22 @@
             {% endif %}
           </span>
         {%- else -%}
-          <span class="price">
+         <span class="price">
+          {% assign price_integer = current_product.price | times: 1 %}
+          {% assign money_price_integer = money_price | times: 1 %}
             {% if settings.currency_code_enabled %}
-              {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% if money_price_integer < price_integer %}
+              {{ money_price }} 
             {% else %}
-              {{ product.selected_or_first_available_variant.price | money }}
+              {{ product.selected_or_first_available_variant.price | money_with_currency }}
             {% endif %}
+            {% else %}
+              {% if money_price_integer < price_integer %}
+                {{ money_price }} 
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money }}
+              {% endif %}
+            {%endif %}
           </span>
         {%- endunless -%}
       {% endif %}

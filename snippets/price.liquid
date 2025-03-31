@@ -32,6 +32,7 @@
     endif
   endif
 %}
+<div> {{ segment_price | json }} </div>
  <script>
    console.log(money_price)
    </script>
@@ -161,7 +162,7 @@
       {% comment %} 1) if price varies between varaints and has compare price {% endcomment %}
       {% if current_product.price_varies and compare_at_price %}
         {%- assign cheapest_variant = product.variants | sort: 'price' | first -%}
-        <div> {{ segment_price | json }} </div>
+        
         <span class="price">
           {%- capture price_min -%}
             {%- if settings.currency_code_enabled -%}

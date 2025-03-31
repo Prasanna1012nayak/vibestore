@@ -175,7 +175,6 @@
           {{- 'products.product.price.from_price_html' | t: price: price_min -}}
         </span>
         {%- if on_sale %}
-          {%- if  product.price < current_product.compare_at_price%} price--on-sale{% endif -%}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
               {{ cheapest_variant.compare_at_price | money_with_currency }}

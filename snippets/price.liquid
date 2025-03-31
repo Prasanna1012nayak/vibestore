@@ -135,7 +135,7 @@
            555   {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
               {% if true %}
-                nhj
+               {{ segment_price < price }}  
                 {% else %}
            666   {{ current_product.compare_at_price | money }}
             {% endif %}

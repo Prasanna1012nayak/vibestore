@@ -1,0 +1,16 @@
+ .product-price__wrapper.main-product__price__wrapper .product-price_top  .segment-price .price
+{
+    display:none;
+}
+.product-price__wrapper.main-product__price__wrapper   .original-price
+{
+    display: block;
+}
+/* .product-price__wrapper .product-price_top  .price
+{
+    text-decoration: line-through;
+}  */
+.variant-price
+{
+    text-decoration: line-through; 
+}

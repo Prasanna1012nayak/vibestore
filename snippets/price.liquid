@@ -40,27 +40,40 @@
       {% comment %} Logic for prices to render on single product when known Variant {% endcomment %}
 
       {% comment %} For Price to be render on products page /Featured product {% endcomment %}
-      hii<span class="price">kkk
+      <span class="price">
         {% if segment_price  %}
-        {{ money_price }}
+        {{ money_price  }}
         {% else %}
         {% if settings.currency_code_enabled %}
-          {{ current_product.price | money_with_currency }}
+         kkk {{ current_product.price | money_with_currency }}
         {% else %}
-          {{ current_product.price |money_with_currency }}
+          {{  current_product.price  |  money_with_currency }}
         {% endif %}
         {% endif %}
+
+        {% unless on_sale  %}
+        {% if settings.currency_code_enabled %}
+          {{ current_product.compare_at_price | money_with_currency }}
+        {% else %}
+          {% if segment_price < current_product.price %}
+           <span class="product-price"> {{ product.price | money_with_currency }}</span>
+          {% else %}
+            uuu  {{ current_product.compare_at_price | money_with_currency }}
+          {% endif %} 
+        {% endif %}
+      {% endunless  %}
+
       {%- if on_sale %}
         {% if compare_at_price %}
           <del class="original-price">
-             {% if settings.currency_code_enabled %}
+            {% if settings.currency_code_enabled %}
               {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-             {% if segment_price < current_product.compare_at_price %}
+              {% if segment_price < current_product.compare_at_price %}
                  {{ product.price | money_with_currency }}
-                {% else %}
-              {{ current_product.compare_at_price | money_with_currency }}
-            {% endif %}
+              {% else %}
+                  {{ current_product.compare_at_price | money_with_currency }}
+                {% endif %} 
             {% endif %}
           </del> 
           {% unless hide_percentage_off %}
@@ -90,7 +103,7 @@
       {% if current_product.price_varies and compare_at_price %}
         {%- assign cheapest_variant = product.variants | sort: 'price' | first -%}
         
-        <span class="price">vvv
+        <span class="price">
             
           {%- capture price_min -%}
             {%- if settings.currency_code_enabled -%}
@@ -128,7 +141,7 @@
 
       {%- elsif  current_product.price < current_product.compare_at_price -%}
         {% unless has_no_varaint %}
-          <span class="price">jjj
+          <span class="price">
             {% assign price_integer = current_product.price | times: 1 %}
             {% assign money_price_integer = money_price | times: 1 %}
             
@@ -149,7 +162,7 @@
          
           </span>
         {% else %}
-          <span class="price"> iiiii
+          <span class="price"> 
             {% assign price_integer = current_product.price | times: 1 %}
             {% assign money_price_integer = money_price | times: 1 %}
             

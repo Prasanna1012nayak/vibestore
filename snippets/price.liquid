@@ -9,6 +9,9 @@
   - show_custom_badges: Enable or disable custom badges
 {% endcomment %}
 
+{{ 'common.css' | asset_url | stylesheet_tag }}
+{{ 'common.js' | asset_url | script_tag }}
+
 {% liquid
   if use_variant
     assign current_product = product.selected_or_first_available_variant
@@ -16,6 +19,21 @@
     assign current_product = product
   endif
   assign compare_at_price = current_product.compare_at_price
+  if customer and customer.metafields.netwise.segment.value != 'draft'
+    assign segment_price = product.selected_or_first_available_variant.metafields.netwise.catalog_price.value[customer.metafields.netwise.segment.value]
+    if segment_price
+      assign compare_at_price = product.price
+      assign segment_price = segment_price.price | times: 100
+      assign money_price = segment_price | times: shop.metafields.netwise.forex.value[shop.currency]
+      assign money_price = money_price | divided_by: shop.metafields.netwise.forex.value[cart.currency.iso_code]
+
+      if settings.currency_code_enabled
+        assign money_price = money_price | money_with_currency
+      else
+        assign money_price = money_price | money_with_currency
+      endif
+    endif
+  endif
 %}
 
 <div class="product-price__wrapper {{ container_class | default: '' }}">
@@ -24,22 +42,42 @@
       {% comment %} Logic for prices to render on single product when known Variant {% endcomment %}
 
       {% comment %} For Price to be render on products page /Featured product {% endcomment %}
-      <span class="price">
-        {% if settings.currency_code_enabled %}
-          {{ current_product.price | money_with_currency }}
+      <span class="price price-item">
+        {% if segment_price  %}
+        {{ money_price  }}
         {% else %}
-          {{ current_product.price | money }}
+        {% if settings.currency_code_enabled %}
+         kkk {{ current_product.price | money_with_currency }}
+        {% else %}
+          {{  current_product.price  |  money_with_currency }}
         {% endif %}
-      </span>
+        {% endif %}
+
+        {% unless on_sale  %}
+        {% if settings.currency_code_enabled %}
+          {{ current_product.compare_at_price | money_with_currency }}
+        {% else %}
+          {% if segment_price < current_product.price %}
+           <span class="product-price"> {{ product.price | money_with_currency }}</span>
+          {% else %}
+             {{ current_product.compare_at_price | money_with_currency }}
+          {% endif %} 
+        {% endif %}
+      {% endunless  %}
+
       {%- if on_sale %}
         {% if compare_at_price %}
           <del class="original-price">
             {% if settings.currency_code_enabled %}
               {{ current_product.compare_at_price | money_with_currency }}
             {% else %}
-              {{ current_product.compare_at_price | money }}
+              {% if segment_price < current_product.compare_at_price %}
+                 {{ product.price | money_with_currency }}
+              {% else %}
+                  {{ current_product.compare_at_price | money_with_currency }}
+                {% endif %} 
             {% endif %}
-          </del>
+          </del> 
           {% unless hide_percentage_off %}
             <span class="offer">
               {%- render 'discount-formate',
@@ -66,24 +104,26 @@
       {% comment %} 1) if price varies between varaints and has compare price {% endcomment %}
       {% if current_product.price_varies and compare_at_price %}
         {%- assign cheapest_variant = product.variants | sort: 'price' | first -%}
+        
         <span class="price">
+            
           {%- capture price_min -%}
             {%- if settings.currency_code_enabled -%}
               {{- cheapest_variant.price | money_with_currency -}}
             {%- else -%}
-              {{- cheapest_variant.price | money -}}
+              {{- cheapest_variant.price |money_with_currency -}}
             {%- endif -%}
           {%- endcapture -%}
           {{- 'products.product.price.from_price_html' | t: price: price_min -}}
         </span>
         {%- if on_sale %}
-          <del class="original-price">
+           <del class="original-price">
             {% if settings.currency_code_enabled %}
-              {{ cheapest_variant.compare_at_price | money_with_currency }}
+         {{ cheapest_variant.compare_at_price | money_with_currency }}
             {% else %}
-              {{ cheapest_variant.compare_at_price | money }}
+             {{ cheapest_variant.compare_at_price |money_with_currency }}
             {% endif %}
-          </del>
+          </del> 
           {% unless hide_percentage_off %}
             <span class="offer">
               {%- render 'discount-formate',
@@ -101,32 +141,63 @@
           {% endunless %}
         {% endif %}
 
-      {%- elsif current_product.price < current_product.compare_at_price -%}
+      {%- elsif  current_product.price < current_product.compare_at_price -%}
         {% unless has_no_varaint %}
           <span class="price">
+            {% assign price_integer = current_product.price | times: 1 %}
+            {% assign money_price_integer = money_price | times: 1 %}
+            
             {% if settings.currency_code_enabled %}
-              {{ current_product.price | money_with_currency }}
+              {% if money_price_integer < price_integer %}
+                {{ money_price }} 
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% endif %}
             {% else %}
-              {{ current_product.price | money }}
+              {% if money_price_integer < price_integer %}
+                <span class="money-price">  {{ money_price }}  </span>
+              <span class="variant-price">  {{  product.selected_or_first_available_variant.price  | money_with_currency  }} </span>
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+                {% endif %}
             {% endif %}
+         
           </span>
         {% else %}
-          <span class="price">
+          <span class="price"> 
+            {% assign price_integer = current_product.price | times: 1 %}
+            {% assign money_price_integer = money_price | times: 1 %}
+            
             {% if settings.currency_code_enabled %}
-              {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% if money_price_integer < price_integer %}
+                {{ money_price }} 
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% endif %}
             {% else %}
-              {{ product.selected_or_first_available_variant.price | money }}
+              {% if money_price_integer < price_integer %}
+                <span class="money-price">  {{ money_price }}  </span>
+              <span class="variant-price">  {{  product.selected_or_first_available_variant.price  | money_with_currency  }} </span>
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+                {% endif %}
             {% endif %}
           </span>
         {% endunless %}
         {%- if on_sale %}
-          <del class="original-price">
-            {% if settings.currency_code_enabled %}
-              {{ current_product.compare_at_price | money_with_currency }}
+           <del class="original-price">
+          {% assign price_integer = current_product.price | times: 1 %}
+          {% assign money_price_integer = money_price | times: 1 %}
+            {% if money_price_integer <  product.selected_or_first_available_variant.price  %}
+              {% comment %} {{ current_product.price  | money_with_currency }}  {% endcomment %}
             {% else %}
-              {{ current_product.compare_at_price | money }}
-            {% endif %}
-          </del>
+              {% if settings.currency_code_enabled %}
+                {{ current_product.compare_at_price | money_with_currency }}
+              {% else %}
+                {{ current_product.compare_at_price | money_with_currency }}
+              {% endif %}
+           {% endif %}
+            </del>
           {% unless hide_percentage_off %}
             <span class="offer">
               {%- render 'discount-formate',
@@ -149,30 +220,56 @@
           {% if settings.currency_code_enabled %}
             {{ current_product.price_min | money_with_currency }}
           {% else %}
-            {{ current_product.price_min | money }}
+            {{ current_product.price_min | money_with_currency }}
           {% endif %}
         {%- endcapture -%}
 
-        <span class="price">
+        <span class="price">ccc
           {{- 'products.product.price.from_price_html' | t: price: price_min -}}
         </span>
       {%- else -%}
         {%- unless has_no_varaint -%}
           <span class="price">
+            {% assign price_integer = current_product.price | times: 1 %}
+            {% assign money_price_integer = money_price | times: 1 %}
+            
             {% if settings.currency_code_enabled %}
-              {{ current_product.price | money_with_currency }}
+              {% if money_price_integer < price_integer %}
+                {{ money_price }} 
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% endif %}
             {% else %}
-              {{ current_product.price | money }}
+              {% if money_price_integer < price_integer %}
+                <span class="money-price">  {{ money_price }}  </span>
+              <span class="variant-price">  {{  product.selected_or_first_available_variant.price  | money_with_currency  }} </span>
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+                {% endif %}
             {% endif %}
+         
           </span>
         {%- else -%}
           <span class="price">
+            {% assign price_integer = current_product.price | times: 1 %}
+            {% assign money_price_integer = money_price | times: 1 %}
+            
             {% if settings.currency_code_enabled %}
-              {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% if money_price_integer < price_integer %}
+                {{ money_price }} 
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+              {% endif %}
             {% else %}
-              {{ product.selected_or_first_available_variant.price | money }}
+              {% if money_price_integer < price_integer %}
+                <span class="money-price">  {{ money_price }}  </span>
+              <span class="variant-price">  {{  product.selected_or_first_available_variant.price  | money_with_currency  }} </span>
+              {% else %}
+                {{ product.selected_or_first_available_variant.price | money_with_currency }}
+                {% endif %}
             {% endif %}
           </span>
+          
         {%- endunless -%}
       {% endif %}
     {%- endif -%}
@@ -184,7 +281,7 @@
     {%- endunless -%}
   >
     <p class="fnt-14 text-color product-unit-price__measurment">
-      <span>{{ product.selected_or_first_available_variant.unit_price | money }}</span><span> / </span>
+      <span>{{ product.selected_or_first_available_variant.unit_price | money_with_currencyh }}</span><span> / </span>
       {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
         <span>{{ product.selected_or_first_available_variant.unit_price_measurement.reference_value }}</span>
       {%- endif -%}

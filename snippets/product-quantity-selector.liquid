@@ -19,7 +19,7 @@
       {%- render 'icon' with 'minus', color_var: 'rgb(var(--color-input-color-rgb)/ 1)' -%}
     </button>
     <label class="visually-hidden" for="quantity-{{ form_id }}"> Quantity </label>
-    <input
+    <input class="quantity-input"
       id="quantity-{{ form_id }}"
       form="{{ form_id }}"
       max="{%- unless product.quantity_rule.max == nil -%}{{ product.quantity_rule.max }}{%- else -%} null {%- endunless -%}"

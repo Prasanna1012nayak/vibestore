@@ -35,6 +35,85 @@
     endif
   endif
 %}
+{%- if segment_price -%}
+  <span id="meta-field" data-value="{{ product.selected_or_first_available_variant.metafields.netwise.catalog_price.value[customer.metafields.netwise.segment.value].volumePricing | json | escape }}" hidden></span>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const priceDisplay = document.querySelector('.price');
+      //console.log("-----------------------------------------", pric)
+      if (priceDisplay && !priceDisplay.hasAttribute('data-original-price')) {
+        priceDisplay.setAttribute('data-original-price', priceDisplay.textContent.trim());
+      }
+    
+      const metaFieldElement = document.getElementById('meta-field');
+      const metaFieldValue = metaFieldElement.getAttribute('data-value');
+      let quantity = 1; 
+      const decodedValue = metaFieldValue
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+      const parsedData = JSON.parse(decodedValue);
+    
+      const getUnitPrice = (qty) => {
+
+        const sortedPricing = parsedData.sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
+    
+        const minQuantity = parseInt(sortedPricing[sortedPricing.length - 1].quantity);
+
+        if (qty < minQuantity) {
+          console.log(`Quantity is below the minimum of ${minQuantity}. Restoring original price.`);
+          return null;
+        }
+    
+        let selectedPrice = null;
+        for (let tier of sortedPricing) {
+          if (qty >= parseInt(tier.quantity)) {
+            selectedPrice = parseFloat(tier.price);
+            break;
+          }
+        }
+        console.log (selectedPrice);
+        return selectedPrice;
+        
+      };
+      
+
+      const updateDisplay = (price) => {
+        if (priceDisplay) {
+          if (price !== null) {
+            // Inject the volume price per item
+            priceDisplay.textContent = `$${price.toFixed(2)}`;
+          } else {
+            // Restore the original price from the data attribute
+            const originalPrice = priceDisplay.getAttribute('data-original-price');
+            priceDisplay.textContent = originalPrice;
+          }
+        }
+        console.log(price);
+      };
+    
+      document.addEventListener('click', (event) => {
+        if (event.target.closest('.quantity__button')) {
+          const quantityInput = event.target.closest('quantity-input').querySelector('.quantity__input');
+          quantity = parseInt(quantityInput.value);
+          const pricePerItem = getUnitPrice(quantity);
+          updateDisplay(pricePerItem);
+        }
+      });
+    
+      document.addEventListener('input', (event) => {
+        if (event.target.matches('.quantity__input')) {
+          quantity = parseInt(event.target.value);
+          const pricePerItem = getUnitPrice(quantity);
+          updateDisplay(pricePerItem);
+        }
+      });
+    });
+    
+    
+  </script>
+{%- endif -%}
 <div class="product-price__wrapper {{ container_class | default: '' }}">
   <div class="product-price_top {% if product.selected_or_first_available_variant.unit_price -%} add-bottom-spacing {%- endif -%}">
     {%- if use_variant -%}
@@ -288,82 +367,3 @@
     </p>
   </div>
 </div>
-{%- if segment_price -%}
-  <span id="meta-field" data-value="{{ product.selected_or_first_available_variant.metafields.netwise.catalog_price.value[customer.metafields.netwise.segment.value].volumePricing | json | escape }}" hidden></span>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-      const priceDisplay = document.querySelector('.price');
-      //console.log("-----------------------------------------", pric)
-      if (priceDisplay && !priceDisplay.hasAttribute('data-original-price')) {
-        priceDisplay.setAttribute('data-original-price', priceDisplay.textContent.trim());
-      }
-    
-      const metaFieldElement = document.getElementById('meta-field');
-      const metaFieldValue = metaFieldElement.getAttribute('data-value');
-      let quantity = 1; 
-      const decodedValue = metaFieldValue
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'");
-      const parsedData = JSON.parse(decodedValue);
-    
-      const getUnitPrice = (qty) => {
-
-        const sortedPricing = parsedData.sort((a, b) => parseInt(b.quantity) - parseInt(a.quantity));
-    
-        const minQuantity = parseInt(sortedPricing[sortedPricing.length - 1].quantity);
-
-        if (qty < minQuantity) {
-          console.log(`Quantity is below the minimum of ${minQuantity}. Restoring original price.`);
-          return null;
-        }
-    
-        let selectedPrice = null;
-        for (let tier of sortedPricing) {
-          if (qty >= parseInt(tier.quantity)) {
-            selectedPrice = parseFloat(tier.price);
-            break;
-          }
-        }
-        console.log (selectedPrice);
-        return selectedPrice;
-        
-      };
-      
-
-      const updateDisplay = (price) => {
-        if (priceDisplay) {
-          if (price !== null) {
-            // Inject the volume price per item
-            priceDisplay.textContent = `$${price.toFixed(2)}`;
-          } else {
-            // Restore the original price from the data attribute
-            const originalPrice = priceDisplay.getAttribute('data-original-price');
-            priceDisplay.textContent = originalPrice;
-          }
-        }
-        console.log(price);
-      };
-    
-      document.addEventListener('click', (event) => {
-        if (event.target.closest('.quantity__button')) {
-          const quantityInput = event.target.closest('quantity-input').querySelector('.quantity__input');
-          quantity = parseInt(quantityInput.value);
-          const pricePerItem = getUnitPrice(quantity);
-          updateDisplay(pricePerItem);
-        }
-      });
-    
-      document.addEventListener('input', (event) => {
-        if (event.target.matches('.quantity__input')) {
-          quantity = parseInt(event.target.value);
-          const pricePerItem = getUnitPrice(quantity);
-          updateDisplay(pricePerItem);
-        }
-      });
-    });
-    
-    
-  </script>
-{%- endif -%}

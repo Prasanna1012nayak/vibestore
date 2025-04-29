@@ -608,7 +608,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Heading",
+            "heading": "{{ metaobjects.about_page.prasanna.heading.value }}",
             "style": "h2"
           }
         },

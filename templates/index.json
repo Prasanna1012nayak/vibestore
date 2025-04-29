@@ -577,9 +577,9 @@
         "text-content-1": {
           "type": "text-content",
           "settings": {
-            "heading": "Heading",
+            "heading": "{{ metaobjects.about_page[\"about-page-z2zgzjkh\"].heading.value }}",
             "subheading": "",
-            "content": "<p>Briefly describe what this heading is about</p>",
+            "content": "<p>{{ metaobjects.about_page[\"about-page-z2zgzjkh\"].sub_text | metafield_tag }}</p>",
             "content_alignment": "left",
             "button_label": "Button label",
             "button_link": "",

@@ -570,7 +570,9 @@
       "blocks": {
         "image-1": {
           "type": "image",
-          "settings": {}
+          "settings": {
+            "image": "{{ metaobjects.about_page[\"about-page-z2zgzjkh\"].image.value }}"
+          }
         },
         "text-content-1": {
           "type": "text-content",

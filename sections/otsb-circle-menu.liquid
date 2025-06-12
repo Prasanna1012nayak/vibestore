@@ -1,0 +1,719 @@
+{% render 'otsb-circle-menu-base.liquid' %}
+{% schema %}
+{
+  "name": "OT: Circle menu",
+  "tag": "section",
+  "class": "section section-collection-list x-section otsb__root",
+  "max_blocks": 16,
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "aside"
+    ] 
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Remove Trademark Free? [Chat with us](https:\/\/go.crisp.chat\/chat\/embed\/?website_id=5e366ec4-30b5-4074-abce-ef95ae74b337)"
+    },
+    {
+      "type": "select",
+      "id": "show_section",
+      "options": [
+        {
+          "value": "show_both",
+          "label": "Both"
+        },
+        {
+          "value": "show_desktop",
+          "label": "Desktop only"
+        },
+        {
+          "value": "show_mobile",
+          "label": "Mobile only"
+        }
+      ],
+      "label": "Display on",
+      "default": "show_both"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Circle [Menu]", 
+      "label": "Heading",
+      "info": "Wrap your text between [] to add heading highlights. E.g: Adding [marker] will underline [highlight] text."
+    },
+    {
+      "type": "select",
+      "id": "highlight_type",
+      "default": "underline",
+      "label": "Marker",
+      "options": [
+        {
+          "value": "underline",
+          "label": "Underline"
+        },
+        {
+          "value": "font_highlight",
+          "label": "Highlight"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "default": 100,
+      "label": "Heading size"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "default": "h2",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        }
+      ]
+    },
+    {
+      "type": "inline_richtext",
+      "id": "sub_heading",
+      "default": "Checkout our latest items for this Winter/Spring season",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "text_line_height",
+      "default": "inherit",
+      "label": "Text line height",
+      "options": [
+        {
+          "value": "0.75",
+          "label": "0.75"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "1.25",
+          "label": "1.25"
+        },
+        {
+          "value": "1.5",
+          "label": "1.5"
+        },
+        {
+          "value": "1.75",
+          "label": "1.75"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "inherit",
+          "label": "inherit"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_font",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "type_header_font",
+      "default": "harmonia_sans_n7",
+      "label": "Heading font"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "default": "harmonia_sans_n4",
+      "label": "Text font"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "default": "center",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Menu item"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_title_font",
+      "default": false,
+      "label": "Use custom title font"
+    },  
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "default": "harmonia_sans_n7",
+      "label": "Title font"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Title size",
+      "default": 80
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "label": "Title alignment",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "title_height",
+      "default": "inherit",
+      "label": "Title height",
+      "options": [
+        {
+          "value": "0.75",
+          "label": "0.75"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "1.25",
+          "label": "1.25"
+        },
+        {
+          "value": "1.5",
+          "label": "1.5"
+        },
+        {
+          "value": "1.75",
+          "label": "1.75"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "inherit",
+          "label": "inherit"
+        } 
+      ]
+    },
+    {
+      "type": "range",
+      "id": "title_top_spacing", 
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 2,
+      "default": 14,
+      "label": "Title top spacing"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_item",
+      "default": true,
+      "label": "Enable border"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_effect",
+      "default": true,
+      "label": "Enable hover effect"
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "min": 1,
+      "max": 10,
+      "unit": "px",
+      "step": 1,
+      "default": 3,
+      "label": "Border thickness"
+    },
+    {
+      "type": "range",
+      "id": "image_border_spacing",
+      "min": 1,
+      "max": 10,
+      "unit": "px",
+      "step": 1,
+      "default": 5,
+      "label": "Image & border spacing"
+    },
+    {
+      "type": "range",
+      "id": "image_border_spacing_mobile",
+      "min": 1,
+      "max": 10,
+      "unit": "px",
+      "step": 1,
+      "default": 3,
+      "label": "Image & border spacing - mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy_load_image",
+      "default": true,
+      "label": "Lazy load image",
+      "info": "Lazy load helps optimizing speed"
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "select",
+      "id": "slider_arrow",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "top_right",
+          "label": "Top right"
+        },
+        {
+          "value": "bottom_right",
+          "label": "Bottom right"
+        },
+        {
+          "value": "center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "top_left",
+          "label": "Top left"
+        }
+      ],
+      "default": "none",
+      "label": "Show navigation arrows"
+    },
+    {
+      "type": "range",
+      "id": "width_height_button",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 45,
+      "label": "Arrow Button Size"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination_mobile",
+      "default": true,
+      "label": "Show pagination on mobile",
+      "info": "This config works when enable Pagination config"
+    },
+    {
+      "type": "select",
+      "id": "slider_visual",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "dots",
+          "label": "Dots"
+        },
+        {
+          "value": "bars",
+          "label": "Bars"
+        },
+        {
+          "value": "dots_border",
+          "label": "Dots border"
+        }
+      ],
+      "default": "none",
+      "label": "Pagination"
+    },
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "range",
+      "id": "item_size",
+      "min": 30,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 130,
+      "label": "Item size"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40,
+      "label": "Item spacing"
+    },
+    {
+      "type": "range",
+      "id": "menu_block_width",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "label": "Menu block width"
+    },
+    {
+      "type": "checkbox",
+      "id": "make_section_full_width", 
+      "default": false,
+      "label": "Make section full width"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider",
+      "default": false,
+      "label": "Show section divider"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_bottom",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 28,
+      "label": "Top/bottom padding"
+    },
+    {
+      "type": "range",
+      "id": "right_padding",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 28,
+      "label": "Right padding"
+    },
+    {
+      "type": "range",
+      "id": "left_padding",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 28,
+      "label": "Left padding"
+    },
+    {
+      "type": "range",
+      "id": "element_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 30,
+      "label": "Elements spacing"
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "item_size_mobile",
+      "min": 30,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 100,
+      "label": "Item size"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "label": "Item spacing"
+    },
+    {
+      "type": "range",
+      "id": "menu_block_width_mobile",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "label": "Menu block width"
+    },
+    {
+      "type": "checkbox",
+      "id": "width_section_mobile", 
+      "default": true,
+      "label": "Make section full width"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_divider_mobile",
+      "default": false,
+      "label": "Show section divider"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 28,
+      "label": "Top/bottom padding"
+    },
+    {
+      "type": "range",
+      "id": "right_padding_mobile",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 0,
+      "label": "Right padding"
+    },
+    {
+      "type": "range",
+      "id": "left_padding_mobile",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 4,
+      "default": 20,
+      "label": "Left padding"
+    },
+    {
+      "type": "range",
+      "id": "element_spacing_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 30,
+      "label": "Elements spacing"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background"
+    },
+    {
+      "type": "color",
+      "id": "color_heading",
+      "default": "rgba(0,0,0,0)",
+      "label": "Heading"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "default": "rgba(0,0,0,0)",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "text_link",
+      "label": "Text link",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "marker_color",
+      "label": "Marker",
+      "default": "#E1A832"
+    },
+    {
+      "type": "color",
+      "id": "title_text_color",
+      "label": "Title Text",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color_background",
+      "id": "border_color_gradient",
+      "default": "linear-gradient(#E1A832,#E1A832)",
+      "label": "Item Border"
+    },
+    {
+      "type": "color_background",
+      "id": "hover_border_color_gradient",
+      "default": "linear-gradient(#E1A832,#DC4613)",
+      "label": "Item Hover"
+    },
+    {
+      "type": "color_background",
+      "id": "background_item_color",
+      "default": "linear-gradient(#c9c9c9,#c9c9c9)",
+      "label": "Item Background",
+    },
+    {
+      "type": "color",
+      "id": "arrow_button_color",
+      "label": "Arrow button",
+      "default": "#EDEDED"
+    },
+    {
+      "type": "color",
+      "id": "arrow_button_hover_color",
+      "label": "Arrow button hover",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow",
+      "default": "#C5C5C5"
+    },
+    {
+      "type": "color",
+      "id": "section_divider_color",
+      "label": "Section divider",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "pagination_icon_color",
+      "label": "Pagination icon",
+      "default": "#E1A832"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "Menu item",
+      "settings": [
+        {
+        "type": "image_picker",
+        "id": "image_menu_item",
+        "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "url_menu_item",
+          "label": "Url"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Menu item",
+          "label": "Title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "OT: Circle menu",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,232 @@
+{% comment %}
+    Renders a menu card
+    Accepts:
+    - columns_desktop: {Number} 
+    Usage:
+    {% render 'otsb-menu-item' %}
+{% endcomment %}
+{% liquid 
+  assign corner_image = false
+  if settings.edges_type == 'rounded_corners'
+    assign corner_image = true 
+  endif 
+  if title_size != blank
+    if settings.heading_base_size != blank
+      assign heading_size = title_size | times: settings.heading_base_size | times: 0.000225
+    else
+      assign heading_size = title_size | times: 150 | times: 0.000225
+    endif
+  endif
+%}
+{%- capture styles -%}
+{%- style -%}
+ {% if bg_menu_item != blank %}
+  .bg-image_item--{{ section.id }} {
+    background: {{ bg_menu_item }};
+  }
+  {% else %}
+  .bg-image_item--{{ section.id }} {
+    background: #eee;
+  }
+ {% endif %}
+  .content--{{ section.id }} .collection-item-title {
+    {% if use_title_item_font %}
+      {{ title_font | font_face: font_display: 'swap' }}
+      font-family: {{ title_font.family }}, {{ title_font.fallback_families }};
+      font-weight: {{ title_font.weight }};
+      font-style: {{ title_font.style }};
+    {% endif %}
+    {% if title_size != blank %}
+      font-size: {{ heading_size | times: 0.45 }}rem;
+      {% if title_height != 'inherit' %}
+      line-height: {{ title_height }};
+      {% endif %}
+    {% else %}
+      font-size: 100%;
+    {% endif %}
+    padding-top: {{ title_top_spacing }}px;
+  }
+  {% if border_color_gradient != blank %}
+    .menu-item-circle-{{ section.id }} {
+      background: {{ border_color_gradient }};
+    }
+  {% else %}
+    .menu-item-circle-{{ section.id }} {
+      background: linear-gradient(#E1A832,#E1A832);
+    }
+  {% endif %}
+  .menu-item-circle-{{ section.id }} {
+    padding: {{ border_thickness }}px;
+  }
+  .img-border-spacing-{{ section.id }} {
+    padding: {{ image_border_spacing_mobile }}px;
+  }
+  {% if hover_border-effect %}
+    
+      .menu-item-hover-circle-{{ section.id }}:hover,
+      .hover-menu-item-{{ section.id }}:hover .menu-item-hover-circle-{{ section.id }}  {
+        {% if hover_border_color != blank%}
+        background: {{hover_border_color}};
+        {% else %}
+        background: #E1A832;
+      {% endif %}
+        padding: {{ border_thickness }}px;
+      }
+  
+  {% endif %}
+  @media screen and (min-width: 768px) {
+    .img-border-spacing-{{ section.id }} {
+      padding: {{ image_border_spacing }}px;
+    }
+    .spacing--{{ section.id }} {
+      gap: {{ section.settings.spacing }}px;
+    }
+    .content--{{ section.id }} .collection-item-title {
+      {% if title_size != blank %}
+        font-size: {{ heading_size | times: 0.6 }}rem;
+      {% else %}
+        font-size: 100%; 
+    {% endif %}
+    }
+  }
+{%- endstyle -%}
+{%- endcapture -%}
+{% comment %} {%- assign before =  styles.size -%} {% endcomment %}
+{%- assign styles =  styles | strip_newlines | split: " " | join: " " | split: "*/" -%}
+{%- assign minified_style = "" -%}
+{%- for word in styles -%}
+	{%- assign new_word = word | split: "/*" | first | strip | replace: "; ", ";" | replace: "} ", "}" | replace: "{ ", "{" | replace: " {", "{" -%}
+    {%- assign minified_style = minified_style | append: new_word -%}
+{%- endfor -%}
+{% comment %} /* CSS minifed: {{ before }} --> {{ minified_style.size }} */ {% endcomment %}
+{{- minified_style  }}
+{% if collection_carousel %}
+  <div class="collection-card collection-card-{{ blockID }} group disable-effect card relative h-full block{% if extend_height %} flex flex-col{% endif %}">
+{% else %}
+  <a {% if url_menu == blank %} role="link" aria-disabled="true"{% else %} href="{{ url_menu }}"{% endif %} class="{% if hover_border-effect %} hover-menu-item-{{ section.id }} {% endif %} collection-card collection-card-{{ section.id }} group disable-effect card relative h-full block{% if extend_height %} flex flex-col{% endif %}">
+{% endif %}
+  <div class="rounded-full  {% if border_item == true %} menu-item-circle-{{ section.id }} {% endif %} {% if hover_border-effect %} menu-item-hover-circle-{{ section.id }} {% endif %}">
+  <div class="bg-white w-full h-full rounded-full img-border-spacing-{{ section.id }}">
+  <div 
+    x-intersect.once.margin.-20px.0px.-20px.0px="$el.querySelector('.animate_transition_card__image')?.classList.add('active')"
+    class="rounded-full w-full relative overflow-hidden z-0 before:h-0 before:block pb-[100%] "
+  >
+    <div>
+      {% capture sizes %}
+        {% if collage %}
+          {% if full_width %}
+            (min-width: 768px) {{ columns_desktop | times: 100 | divided_by: max_columns }}vw, {{ columns_mobile | times: 100 | divided_by: min_columns_mobile }}vw
+          {% else %}
+            (min-width: {{ settings.page_width }}px) {{ settings.page_width | times: columns_desktop | divided_by: max_columns }}px, {{ columns_mobile | times: 100 | divided_by: min_columns_mobile }}vw
+          {% endif %}
+        {% else %}
+          (min-width: {{ settings.page_width }}px) {% if enable_desktop_slider %}{{ settings.page_width | plus: 100 | divided_by: columns_desktop }}px{% else %}calc(100vw / {{ columns_desktop }}){% endif %},
+            (min-width: 768px) {% if columns_desktop > 1 %}calc(100vw / 2){% else %}100vw{% endif %}, 
+            calc(100vw / {{ columns_mobile }})
+          {% endif %}
+        {% endcapture %}
+        {%- if image_menu != blank -%}
+          <div 
+            class="w-full h-full top-0 left-0 absolute overflow-hidden bg-image_item--{{ section.id }}"
+          >
+            <img
+              srcset="{{ image_menu | image_url: width: 225 }} 225w,
+              {{ image_menu | image_url: width: 375 }} 375w,
+              {{ image_menu | image_url: width: 450 }} 450w,
+              {{ image_menu | image_url: width: 750 }} 750w,
+              {{ image_menu | image_url: width: 900 }} 900w,
+              {{ image_menu | image_url: width: 1100 }} 1100w,
+              {{ image_menu | image_url: width: 1500 }} 1500w,
+              {{ image_menu | image_url: width: 1780 }} 1780w,
+              {{ image_menu | image_url: width: 2000 }} 2000w,
+              {{ image_menu | image_url: width: 3000 }} 3000w,
+              {{ image_menu | image_url: width: 3840 }} 3840w"
+              src="{{ image_menu | image_url: width: 3840 }}"
+              sizes="{{ sizes }}"
+              alt="{{ image.alt | escape }}"
+              height="{{ image.height }}"
+              width="{{ image.width }}"
+              loading="{% if enable_lazy_load %}lazy{%  else %}eager{% endif %}"  
+              class="aspect-{{ image_ratio }} w-full h-full object-cover z-10 object-center image-hover{% if image_ratio == "round" %} rounded-full{% endif %}{% if corner_image and image_ratio != "round" %} md:rounded-[10px]{% unless card_full_width %} rounded-[10px]{% endunless %}{% endif %}"
+            >
+          </div>
+        {%- else -%}
+          <div class="flex{% unless image_ratio == "auto" %} absolute{% endunless %} top-0 left-0 w-full h-full items-center bg-image_item--{{ section.id }}">
+            {% render 'otsb-icon-placeholder', icon: 'icon-collection' , class: 'text-[#acacac] w-full h-full' -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="content--{{ section.id }} text-{{ content_alignment }} left-0 right-0 grow 
+    {%- if card_full_width %} pl-5 pr-5 md:pl-0 md:pr-0{% endif -%}
+    {%- if collection_carousel %} text-color-{{ blockID }} flex flex-col justify-between h-full{% endif -%}"
+  >
+    <div class="collection-item-title leading-tight text-[rgba(var(--colors-title))] text-{{ align_menu }}">
+      {%- if heading_menu != blank -%}
+        <p
+          class=" p-break-words transition duration-200">
+            {{ heading_menu }}
+        </p>
+      {%- endif -%}
+    </div>
+    {%- if card_collection != blank and section.settings.show_item_count or collage -%}
+      <p class="text-[rgba(var(--colors-text))] {% if collage %} mt-2.5 leading-none{% else %} mt-1{% endif %}{% if columns_desktop > 8 %} text-normal{% endif %}">
+        {{ card_collection.all_products_count }}{% if card_collection.all_products_count > 1 %} {{ 'sections.collection_list.items' | t }} {% else %} {{ 'sections.collection_list.item' | t }}{% endif %}
+      </p>
+    {%- endif -%}
+    {% if card_collection and collection_carousel and button_label != blank %}
+    {%- capture styles -%}
+      {%- style -%}
+        {%- if show_button_style == 'primary' -%}
+          .button--{{ blockID }}.button-solid,
+          .button--{{ blockID }}.button-solid:before { 
+            {%- unless color_button.alpha == 0.0 -%}
+              --colors-line-and-border: {{ color_button.red }}, {{ color_button.green }}, {{ color_button.blue }};
+              --colors-button: {{ color_button.red }}, {{ color_button.green }}, {{ color_button.blue }};
+            {%- else -%}
+              --colors-line-and-border: var(--colors-button);
+            {%- endunless -%}
+            {%- unless color_button_hover.alpha == 0.0 -%}
+              --colors-button-hover: rgb({{ color_button_hover.red }}, {{ color_button_hover.green }}, {{ color_button_hover.blue }});
+            {%- endunless -%}
+            {%- unless color_text_button.alpha == 0.0 -%}
+              --colors-button-text: {{ color_text_button.red }}, {{ color_text_button.green }}, {{ color_text_button.blue }};
+            {%- endunless -%}
+            {%- unless color_text_button_hover.alpha == 0.0 -%}
+              --colors-button-text-hover: {{ color_text_button_hover.red }}, {{ color_text_button_hover.green }}, {{ color_text_button_hover.blue }};
+            {%- endunless -%}
+          }
+        {%- else -%}
+          .button--{{ blockID }}.button-outline {
+            {%- if secondary_button_text.alpha != 0.0 -%} 
+              --colors-secondary-button: {{ secondary_button_text.red }}, {{ secondary_button_text.green }}, {{ secondary_button_text.blue }}; 
+              --colors-line-secondary-button: {{ secondary_button_text.red }}, {{ secondary_button_text.green }}, {{ secondary_button_text.blue }};
+              --background-secondary-button: transparent;
+            {%- endif -%}
+            {%- if color_button_secondary.alpha != 0.0 -%} 
+              --background-secondary-button: {{ color_button_secondary.red }}, {{ color_button_secondary.green }}, {{ color_button_secondary.blue }}; 
+              --colors-line-secondary-button: {{ color_button_secondary.red }}, {{ color_button_secondary.green }}, {{ color_button_secondary.blue }}; 
+            {%- endif -%}
+          }
+          {% if colors_text_link.alpha != 0.0 %}
+            .button--{{ blockID }}.button-text-link, .button--{{ blockID }}.button-text-link::after, .button--{{ blockID }}.button-text-link::before {
+              --colors-text-link: {{ colors_text_link.red }}, {{ colors_text_link.green }}, {{ colors_text_link.blue }};
+            }
+          {% endif %}
+        {%- endif -%}
+      {%- endstyle -%}
+      {%- endcapture -%}
+      <div>
+        <a href="{{ card_collection.url }}"{% if open_new_window_button %} target="_blank"{% endif %} class="button{% if show_button_style == 'secondary' %} button-outline{% elsif show_button_style == 'text-link' %} button-text-link {% else %} button-solid{% endif %} button--{{ blockID }} p-break-words border inline-block empty:hidden lg:mb-4 xl:mb-6 pl-4 pr-4 lg:pl-6 lg:pr-6 pt-2.5 pb-2.5 leading-normal md:pt-3 md:pb-3 cursor-pointer pointer-events-auto{% if show_button_style == 'text-link' %} mt-2 lg:mt-3{% else %} mt-4 lg:mt-6{% endif %}">
+          {% render 'button-label', button_label: button_label, show_button_style: show_button_style %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{% if collection_carousel %}
+  </div>
+{% else %}
+  </a>
+{% endif %}

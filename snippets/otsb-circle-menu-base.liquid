@@ -1,0 +1,525 @@
+{%- liquid
+    if settings.heading_base_size != blank
+      assign heading_size = settings.heading_base_size | times: section.settings.heading_size | times: 0.000225
+    else
+      assign heading_size = section.settings.heading_size | times: 100 | times: 0.0004
+    endif
+    if settings.heading_scale
+      assign heading_size = heading_size | times: settings.heading_scale | times: 0.01
+    endif
+    assign enable_desktop_slider = section.settings.enable_desktop_slider
+    if section.blocks.size <= columns_desktop
+        assign enable_desktop_slider = false
+    endif
+    assign ratio = 100
+    if section.settings.image_ratio == 'rectangle'
+        assign ratio = 150
+    endif
+    if section.settings.image_ratio == 'landscape'
+        assign ratio = 75
+    endif
+    if section.settings.image_ratio == '3/4'
+        assign ratio = 133
+    endif
+    if settings.lang_direction contains request.locale.iso_code
+        assign is_rtl = true
+        assign class_rtl = 'margin-left'
+    else
+        assign is_rtl = false
+        assign class_rtl = 'margin-right'
+    endif
+-%}
+{%- capture styles -%}
+{%- style -%}
+
+    {{ section.settings.type_header_font | font_face: font_display: 'swap' }}
+    {{ section.settings.text_font | font_face: font_display: 'swap' }}
+
+  
+  .otsb__root .heading-{{ section.id }} {
+    font-size: {{ heading_size | times: 0.6 }}rem;
+  }
+  .gap-mobile-{{ section.id }} {
+    gap: {{ section.settings.spacing_mobile }}px;
+  }
+  #shopify-section-{{ section.id }} .divider {
+    {% if section.settings.section_divider_color.alpha != 0.0 %}
+    border-color: {{ section.settings.section_divider_color }};
+    {% else %}
+    border-color: rgba(var(--color-foreground), 0.75);
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} a {
+    {% if section.settings.text_link.alpha != 0.0 %}
+    color: {{ section.settings.text_link }};
+    {% else %}
+    color: rgba(var(--color-link), var(--alpha-link));
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }}{ 
+    background: {{ section.settings.background_color }};
+    {% if section.settings.color_heading.alpha != 0.0 %}
+    --colors-heading: {{ section.settings.color_heading.red }},{{ section.settings.color_heading.green }},{{ section.settings.color_heading.blue }};
+    {% else %}
+    --colors-heading: var(--color-foreground);
+    {% endif %}
+    {%- unless section.settings.color_line.alpha == 0.0 -%}
+    --colors-line-and-border: {{ section.settings.color_line.red }}, {{ section.settings.color_line.green }}, {{ section.settings.color_line.blue }};
+    {%- endunless -%}
+    --colors-line-and-border: {{ section.settings.color_line.red }}, {{ section.settings.color_line.green }}, {{ section.settings.color_line.blue }};
+    {% if section.settings.text_color.alpha != 0.0 %}
+    --colors-text: {{ section.settings.text_color.red }},{{ section.settings.text_color.green }},{{ section.settings.text_color.blue }};
+    {% endif %}
+    {% if section.settings.use_custom_font %}
+    --font-heading-family: {{ section.settings.type_header_font.family }};
+    --font-heading-weight: {{ section.settings.type_header_font.weight }};
+    --font-heading-style: {{ section.settings.type_header_font.style }};
+    {% endif %}
+    }
+    #shopify-section-{{ section.id }} .highlight.hl-font {
+      color: var(--color-highlight);
+    }
+    #shopify-section-{{ section.id }} .highlight.hl-underline {
+      color: var(--color-highlight);
+    }
+    .content--{{ section.id }} {
+    {% if section.settings.title_text_color.alpha != 0.0 %}
+    --colors-title: {{ section.settings.title_text_color.red }},{{ section.settings.title_text_color.green }},{{ section.settings.title_text_color.blue }};
+    {% else %}
+    color: rgba(var(--color-foreground), 0.75);
+    {% endif %}
+    }
+    {% if section.settings.use_custom_font %}
+      .sub-heading-{{ section.id }} {
+        font-family: {{ section.settings.text_font.family }}, {{ section.settings.text_font.fallback_families }};
+        font-weight: {{ section.settings.text_font.weight }};
+        font-style: {{ section.settings.text_font.style }};
+      }
+  {% endif %}
+    {% if section.settings.text_line_height != 'inherit' %}
+      .sub-heading-{{ section.id }} {
+        line-height: {{ section.settings.text_line_height}};
+      }
+    {% endif %}
+    {% unless section.settings.slider_arrow == 'center'%}
+    #shopify-section-{{ section.id }} .splide__arrow {
+      width: {{section.settings.width_height_button}}px;
+      height: {{section.settings.width_height_button}}px;
+      {% if section.settings.arrow_button_color.alpha != 0.0 %}
+      background-color: {{ section.settings.arrow_button_color }};
+      {% else %}
+      background-color: rgba(237,237,237,0.8);
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .splide__arrow:hover {
+      {% if section.settings.arrow_button_hover_color.alpha != 0.0 %}
+      background-color: {{ section.settings.arrow_button_hover_color }};
+      {% else %}
+      background-color: rgba(237,237,237,0.8);
+      {% endif %}
+    }
+    {% endunless %}
+    #shopify-section-{{ section.id }} .splide__arrow svg path {
+      {% if section.settings.arrow_color.alpha != 0.0 %}
+      color: {{ section.settings.arrow_color }};
+      {% else %}
+      color: #C5C5C5;
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .arrow-top {
+      top: calc(-{{ section.settings.width_height_button }}px - {{ section.settings.element_spacing }}px);
+    }
+    #shopify-section-{{ section.id }} .splide__arrows {
+      height: {{section.settings.width_height_button}}px;
+    }
+    {% if section.settings.slider_arrow == 'bottom_right'or  section.settings.slider_arrow == 'top_right'%}
+    #shopify-section-{{ section.id }} .splide__arrow--prev {
+      right: calc({{section.settings.width_height_button}}px + 10px);
+    }
+    {% endif %}
+    {% if section.settings.slider_arrow == 'top_left' %}
+      #shopify-section-{{ section.id }} .splide__arrow--next {
+        left: calc({{section.settings.width_height_button}}px + 10px);
+      }
+    {% endif %}
+    .width-menu-{{ section.id }} {
+      width: {{section.settings.menu_block_width_mobile}}%;
+    }
+    .content-all-section-{{ section.id }} {
+      padding-right: {{ section.settings.right_padding_mobile}}px;
+      padding-left: {{ section.settings.left_padding_mobile}}px;
+    }
+    .gap-element-{{ section.id }} {
+      gap: {{ section.settings.element_spacing_mobile}}px;
+    }
+    .width-section-{{ section.id }} .splide__slide {
+      width: {{ section.settings.item_size_mobile }}px;
+    }
+    .gap-{{ section.id }} {
+      gap: {{ section.settings.item_spacing_mobile }}px;
+    }
+    @media screen and (min-width: 768px) {
+      #shopify-section-{{ section.id }} .x-splide:not(.disable-effect-hover):hover .splide__arrow--next:not(.disable-effect-hover), 
+      #shopify-section-{{ section.id }} .x-splide:not(.disable-effect-hover):hover .splide__arrow--prev:not(.disable-effect-hover) {
+        --tw-translate-x: 0;
+      }
+    .otsb__root .md\:page-width {
+      max-width: var(--page-width);
+    }
+    #shopify-section-{{ section.id }} .otsb__root .otsb-carousel-mobile.otsb-carousel-mobile, 
+    #shopify-section-{{ section.id }} .otsb__root .otsb-carousel-mobile.page-width-mobile {
+    padding-left: 0;
+    padding-right: 0;
+    }
+    .width-section-{{ section.id }} .splide__slide {
+      width: {{ section.settings.item_size }}px;
+    }
+    .gap-element-{{ section.id }} {
+      gap: {{ section.settings.element_spacing}}px;
+    }
+    .content-all-section-{{ section.id }} {
+      padding-right: {{ section.settings.right_padding}}px;
+      padding-left: {{ section.settings.left_padding}}px;
+    }
+    .width-menu-{{ section.id }} {
+      width: {{section.settings.menu_block_width}}%;
+    }
+    .gap-{{ section.id }} {
+      gap: {{ section.settings.item_spacing }}px;
+    }
+    .otsb__root .heading-{{ section.id }}{ font-size: {{ heading_size }}rem; }
+    }
+    #shopify-section-{{ section.id }} button.otsb-button-arrow {
+    background-color: rgba({{ section.settings.slider_button_color.red }}, {{ section.settings.slider_button_color.green }}, {{ section.settings.slider_button_color.blue }}, 0.3);
+    color: {{ section.settings.slider_button_color }};
+    box-shadow: none;
+    border-radius: 50px;
+    }
+    #shopify-section-{{ section.id }} .pagination-none {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .btn-dots:before,
+    #shopify-section-{{ section.id }} .btn-bars:before,
+    #shopify-section-{{ section.id }} .btn-dots_border:before {
+      content:"";
+    }
+    #shopify-section-{{ section.id }} .btn-dots:after,
+    #shopify-section-{{ section.id }} .btn-bars:after,
+    #shopify-section-{{ section.id }} .btn-dots_border:after {
+      box-shadow: none;
+      background: #f2f2f2;
+      opacity: 1;
+      width: 8px;
+      height: 8px;
+      border-radius: 100%;
+      content:"";
+      margin-left: 0;
+      margin-right: 0;
+      position: absolute;
+    }
+    #shopify-section-{{ section.id }} .btn-dots_border:after {
+      top: 1px;
+      left: 1px;
+      position: absolute;
+    }
+    #shopify-section-{{ section.id }} .btn-dots_border.is-active {
+      {% if section.settings.pagination_icon_color.alpha != 0.0 %}
+      border: 1px solid {{ section.settings.pagination_icon_color }};
+      {% else %}
+      border: 1px solid #E1A832;
+      {% endif %}
+      border-radius: 100%;
+    }
+    #shopify-section-{{ section.id }} .btn-dots_border.is-active:before {
+      border: 1px solid #fff;
+      border-radius: 100%;
+      position: absolute;
+    }
+    #shopify-section-{{ section.id }} .btn-dots.is-active:after,
+    #shopify-section-{{ section.id }} .btn-bars.is-active:after,
+    #shopify-section-{{ section.id }} .btn-dots_border.is-active:after  {
+      {% if section.settings.pagination_icon_color.alpha != 0.0 %}
+      background: {{ section.settings.pagination_icon_color }};
+      {% else %}
+      background: #E1A832;
+      {% endif %}
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+    }
+    #shopify-section-{{ section.id }} .btn-bars.is-active:after,
+    #shopify-section-{{ section.id }} .btn-bars.is-active:before,
+    #shopify-section-{{ section.id }} .btn-bars.is-active  {
+      width: 45px;
+      display: flex;
+      margin-right: 7px;
+      border-radius: 26px;
+    }
+    #shopify-section-{{ section.id }} button.otsb-button-arrow:hover {
+      color: {{ section.settings.slider_button_hover_text_color }};
+      background: {{ section.settings.slider_button_hover_color }};
+    }
+    {% if section.settings.slider_visual == 'none' and section.settings.slider_arrow == 'bottom_right' %}
+      #shopify-section-{{ section.id }} .splide__arrows {
+        position: relative;
+        padding: 30px;
+      }
+    {% endif %}
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} .splide__arrows {
+        display: none;
+      }
+    }
+{%- endstyle -%}
+{%- endcapture -%}
+{% comment %} {%- assign before =  styles.size -%} {% endcomment %}
+{%- assign styles =  styles | strip_newlines | split: " " | join: " " | split: "*/" -%}
+{%- assign minified_style = "" -%}
+{%- for word in styles -%}
+	{%- assign new_word = word | split: "/*" | first | strip | replace: "; ", ";" | replace: "} ", "}" | replace: "{ ", "{" | replace: " {", "{" -%}
+    {%- assign minified_style = minified_style | append: new_word -%}
+{%- endfor -%}
+{% comment %} /* CSS minifed: {{ before }} --> {{ minified_style.size }} */ {% endcomment %}
+{{- minified_style  }}
+{% if request.design_mode %}
+  <style>
+    .otsb_nope {
+      display: none !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      visibility: hidden !important;
+      width: 0 !important;
+      opacity: 0 !important;
+    }
+    ._otsb_warning {
+      position: relative;
+      box-shadow: 0rem 0.1875rem 0.0625rem -0.0625rem rgba(26, 26, 26, 0.07);
+      border-radius: 1rem;
+    }
+    ._otsb_warning::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      box-shadow: 0.0625rem 0rem 0rem 0rem rgba(0, 0, 0, 0.13) inset, -0.0625rem 0rem 0rem 0rem rgba(0, 0, 0, 0.13) inset, 0rem -0.0625rem 0rem 0rem rgba(0, 0, 0, 0.17) inset, 0rem 0.0625rem 0rem 0rem rgba(204, 204, 204, 0.5) inset;
+      border-radius: 1rem;
+      pointer-events: none;
+      mix-blend-mode: luminosity;
+    }
+    .otsb_warning_root {
+      margin-top:36px;
+      margin-bottom:36px;
+    }
+    .otsb_warning_root ._otsb_warning_1 {border-top-left-radius:1rem;border-top-right-radius:1rem;border:1px solid #fcaf0a;background:#fcb827;padding:1rem}
+    .otsb_warning_root ._otsb_warning_2 {align-items:center;gap:8px;display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between}
+    .otsb_warning_root ._otsb_warning_3 {display:flex;gap:4px;flex-direction:row;flex-wrap:nowrap;justify-content:space-between}
+    .otsb_warning_root ._otsb_warning ._otsb_warning__icon {display:block;height:20px;width:20px;max-height:100%;max-width:100%;margin:auto}
+    .otsb_warning_root h2 {overflow-wrap:anywhere;word-break:normal;font-size:100%;font-weight:650;line-height:1.25;color:rgb(37,26,0)}
+    .otsb_warning_root * {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body-family);
+      line-height: 1.375;
+    }
+    .otsb_warning_root ul {
+      list-style-type: disc;
+    }
+    .otsb_warning_root a {
+      color: rgb(0, 0, 238);
+      text-decoration: underline;
+    }
+    .otsb_warning_root .otsb_warning_message_container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding:1rem;
+      color:rgb(37,26,0);
+    }
+    .otsb_warning_root .otsb_warning_message_container ul {
+      padding-inline-start:3rem;
+    }
+  </style>
+  <div x-data="otsb_script_require" class="page-width otsb_warning_root">
+    <div class="_otsb_warning">
+      <div class="_otsb_warning_1">
+        <div class="_otsb_warning_2">
+          <div class="_otsb_warning_3">
+            <span class="_otsb_warning__icon">
+              <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg" focusable="false" aria-hidden="true"><path d="M10 6.75a.75.75 0 0 1 .75.75v3.5a.75.75 0 1 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75Z"></path><path d="M11 13.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path><path fill-rule="evenodd" d="M10 3.5c-1.045 0-1.784.702-2.152 1.447a449.26 449.26 0 0 1-2.005 3.847l-.028.052a403.426 403.426 0 0 0-2.008 3.856c-.372.752-.478 1.75.093 2.614.57.863 1.542 1.184 2.464 1.184h7.272c.922 0 1.895-.32 2.464-1.184.57-.864.465-1.862.093-2.614-.21-.424-1.113-2.147-2.004-3.847l-.032-.061a429.497 429.497 0 0 1-2.005-3.847c-.368-.745-1.107-1.447-2.152-1.447Zm-.808 2.112c.404-.816 1.212-.816 1.616 0 .202.409 1.112 2.145 2.022 3.88a418.904 418.904 0 0 1 2.018 3.875c.404.817 0 1.633-1.212 1.633h-7.272c-1.212 0-1.617-.816-1.212-1.633.202-.408 1.113-2.147 2.023-3.883a421.932 421.932 0 0 0 2.017-3.872Z"></path></svg>
+            </span>
+            <h2>App Embeds Are Disabled</h2>
+          </div>
+        </div>
+      </div>
+      <div class="otsb_warning_message_container">
+        <p>To use this section, the app embeds of OT: Theme Sections must be enabled in the theme editor. Please follow these steps to activate them:</p>
+        <ul>
+          <li>In the left panel, click the last icon that says <b>“App embeds”</b>.</li>
+          <li>Enter <b>“OT”</b> on the search bar to quickly find and embed the apps from OT: Theme Sections.</li>
+          <li>Turn on the Toggle buttons of "Section Builder Script" and "Section Builder Style", then click <b>Save</b>.</li>
+        </ul>
+        <p>Please refer to the User Guide <a href="https://support.omnithemes.com/blogs/ot-theme-sections-get-started/1-embed-app-to-shopify-theme" target="_blank">here</a></p>
+        <p>For further support: feel free to contact us at <a href="mailto:support@omnithemes.com">support@omnithemes.com</a>!</p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+<style>#shopify-section-{{section.id}} .otsb_trademark_root {user-select:none;color:#999;font-size:.75em;text-align:right;margin-top:2.5rem}#shopify-section-{{section.id}} .otsb_trademark_root a {color:#999;background:none;text-decoration: none;}</style>
+<div class="width-section-{{ section.id }} {% if section.settings.make_section_full_width %} md:w-full {% else %} md:page-width {% endif %} {% if section.settings.width_section_mobile %} w-full {% else %} page-width {% endif %} mx-auto otsb__root otsb_nope {% if section.settings.show_section == 'show_desktop' %} md:block otsb-hidden {% elsif section.settings.show_section == 'show_mobile' %} md:hidden block{% endif %}" x-data="otsb_script_1">
+  {% render 'otsb-section-divider' %}
+    <div
+        class="flex flex-col gap-element-{{ section.id }} content-all-section-{{ section.id }} relative pt-[{{ section.settings.padding_top_bottom_mobile }}px] pb-[{{ section.settings.padding_top_bottom_mobile }}px]  md:pt-[{{ section.settings.padding_top_bottom }}px] md:pb-[{{ section.settings.padding_top_bottom }}px]
+        ">
+          <div class="{% if section.settings.slider_arrow == 'top_right' or section.settings.slider_arrow == 'top_left' %} width-content-title-{{ section.id }} relative {% endif %}">
+              <div class="flex flex-col gap-element-{{ section.id }}"> 
+                {%- if section.settings.heading != blank -%}
+                <{{ section.settings.heading_tag }} class="h2 block heading-{{ section.id }} leading-tight {% if section.settings.content_alignment %}text-{{ section.settings.content_alignment }}{% endif %}">
+                    {% render 'otsb-heading-highlight',
+                      headingId: section.id,
+                      heading: section.settings.heading,
+                      highlight_type: section.settings.highlight_type,
+                      color_heading_highlight_light: section.settings.marker_color,
+                      color_text: section.settings.text_color
+                    %}
+                  </{{ section.settings.heading_tag }}>
+                {%- endif -%}
+                {% if section.settings.sub_heading != blank %}
+                  <p class="{% if section.settings.content_alignment %}text-{{ section.settings.content_alignment }}{% endif %} sub-heading-{{ section.id }}  text-[rgba(var(--colors-text))]">{{ section.settings.sub_heading }}</p>
+                {% endif %}
+              </div>
+        </div>
+    <div
+        class="mx-auto otsb-carousel-mobile otsb-carousel-tablet otsb-full-width-mobile width-menu-{{ section.id }}">
+        <div class="otsb-circle-menu">
+            <div
+                x-data
+                id="x-circlemenu-{{ section.id }}-{{ block.id }}"
+                    class="{% if section.settings.slider_arrow == 'top_right' or section.settings.slider_arrow == 'top_left' %} position-slide-{{ section.id }} {% endif %}flex flex-col gap-element-{{ section.id }} {% if settings.lang_direction contains request.locale.iso_code and section.settings.transition_style == "fade" %}otsb-ltr {% endif %}x-splide splide visible"
+                    x-intersect.once.margin.200px='
+            $store.otsb_xSplide.load($el, {
+              "speed": 1000,
+              "mediaQuery": "min",
+              "updateOnMove": "true",
+              "padding": "20",
+              {%- if settings.lang_direction contains request.locale.iso_code %}
+                "direction": "rtl",
+              {%- endif %}
+              "breakpoints": {
+                300: {
+                  "focus": "right",
+                  "perMove": 1,
+                  "fixedWidth": "{{ section.settings.item_size_mobile }}px",
+                  {% if section.settings.show_pagination_mobile %}
+                  "pagination": "true",
+                  {% else %}
+                  "pagination": "false",
+                  {% endif %}
+                },
+                768: {
+                  "perMove": 1,
+                  "fixedWidth": "{{ section.settings.item_size }}px",
+                }
+              },
+              "classes": {
+                "arrows" : "block",
+                {% if section.settings.slider_visual == "dots" -%}
+                  "page": "btn-{{section.settings.slider_visual}} button none_border flex items-center pt-[7.5px] pl-[7.5px] pr-[7.5px] min-w-2 min-h-2",
+                {% endif %}
+                {% if section.settings.slider_visual == "bars" -%}
+                  "page": "btn-{{section.settings.slider_visual}} button none_border flex items-center pt-[7.5px] pl-[7.5px] pr-[7.5px] min-w-2 min-h-2",
+                {% endif %}
+                {% if section.settings.slider_visual == "dots_border" -%}
+                  "page": "btn-{{section.settings.slider_visual}} button none_border flex items-center pt-[5px] pb-[5px] pl-[5px] pr-[5px] min-w-2 min-h-2",
+                {% endif %}
+                "pagination": "{% if section.settings.slider_visual == "dots_border" -%}gap-2 {% endif %} {% if section.settings.show_pagination_mobile %}flex {% else %} otsb-hidden md:flex {% endif %} splide__pagination pointer-events-none flex-nowrap pagination-{{ section.settings.slider_visual }}",
+              }
+            })
+          '
+            >
+                <div
+                    class="splide__track lg:pt-0.5 lg:pb-0.5 md:cursor-grab">
+                    <div
+                        class="lg:flex lg:w-full gap-{{ section.id }} splide__list flex w-full"
+                    >
+                        {%- for block in section.blocks -%}
+                            <div
+                                x-slide-index="{{ forloop.index | minus: 1 }}"
+                                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                                class="splide__slide x-splide-slide preload-slide--{{ section.id }}"
+                                {{ block.shopify_attributes }}
+                            >  
+                                {% case block.type %}
+                                    {%- when 'featured_collection' -%}
+                                        {% render 'otsb-menu-item',
+                                          image_menu: block.settings.image_menu_item,
+                                          url_menu: block.settings.url_menu_item,
+                                          heading_menu: block.settings.title,
+                                          align_menu: section.settings.title_alignment,
+                                          color_title: block.settings.title_text_color,
+                                          border_item: section.settings.border_item,
+                                          border_color: section.settings.border_color,
+                                          border_color_gradient: section.settings.border_color_gradient,
+                                          hover_border-effect: section.settings.enable_hover_effect,
+                                          hover_border_color: section.settings.hover_border_color_gradient,
+                                          border_thickness: section.settings.border_thickness,
+                                          image_border_spacing: section.settings.image_border_spacing,
+                                          image_border_spacing_mobile: section.settings.image_border_spacing_mobile,
+                                          enable_lazy_load: section.settings.lazy_load_image,
+                                          bg_menu_item: section.settings.background_item_color,
+                                          block_type: block.type,
+                                          block: block,
+                                          title_size: section.settings.title_size,
+                                          title_height: section.settings.title_height,
+                                          title_top_spacing: section.settings.title_top_spacing,
+                                          content_alignment: section.settings.content_alignment,
+                                          collection_metafield: section.settings.collection_metafield,
+                                          use_title_item_font: section.settings.use_custom_title_font,
+                                          title_font: section.settings.title_font
+                                        %}
+                                {%- endcase -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+                    <div class="flex splide__pagination pointer-events-none flex-nowrap pagination-bars splide__pagination--ltr h-4"></div>
+                    <div class="mb-[5px] btn-arrow-{{ section.id}} {% if section.settings.slider_arrow == 'none' %} otsb-hidden {% else %} block {% endif %}splide__arrows w-full {% if section.settings.slider_arrow == 'top_right' %} absolute right-0 arrow-top {% endif %} {% if section.settings.slider_arrow == 'top_left' %} absolute -top-[80px] arrow-top{% endif %} {% if section.settings.slider_arrow == 'bottom_right' %} absolute right-0 {% if section.settings.slider_visual == "none" -%} bottom-0  {% else %} -bottom-[17px] {% endif %}{% endif %} {% if section.settings.slider_arrow == 'center' %} flex justify-center {% endif %}">
+                        <button
+                            class="splide__arrow splide__arrow--prev otsb-button-arrow  flex items-center justify-center  none_border z-2 lg:w-24 lg:h-24 rounded-full after:text-[20px] pt-2 pb-2 pl-2 pr-2 lg:pt-4 lg:pl-4 lg:pb-4 lg:pr-4 duration-100 opacity-60 hover:opacity-100 disabled:opacity-40 disabled:cursor-not-allowed {% if section.settings.slider_arrow == 'center' %} rotate-180 {% endif %}
+                            {% if section.settings.slider_arrow == 'bottom_right' or  section.settings.slider_arrow == 'top_right'%} bg-[#dedede] absolute  right-0 lg:right-28 top-1/2 -translate-y-1/2 rotate-90 {% endif %} {% if section.settings.slider_arrow == 'top_left' %} bg-[#dedede] absolute  left-0 top-1/2 -translate-y-1/2 rotate-90 {% endif %}"
+                            aria-label="previous slide"
+                        >
+                            
+                            {% if section.settings.slider_arrow == 'center' %}
+                              <span class="w-10 h-10 block">
+                                {% render 'otsb-icon-alls', icon: 'icon-arrow'%}
+                              </span>
+                            {% else %}
+                              <span class="w-6 h-6 block">
+                                {% render 'otsb-icon-alls', icon: 'icon-caret'%}
+                              </span>
+                            {% endif %}
+                            
+                        </button>
+                        <button
+                            class="splide__arrow splide__arrow--next otsb-button-arrow flex items-center justify-center  none_border z-2  lg:w-24 lg:h-24 rounded-full after:text-[20px] pt-2 pb-2 pl-2 pr-2 lg:pt-4 lg:pl-4 lg:pb-4 lg:pr-4 duration-100 opacity-60 hover:opacity-100 disabled:opacity-40 disabled:cursor-not-allowed 
+                            {% if section.settings.slider_arrow == 'bottom_right'or  section.settings.slider_arrow == 'top_right'%} bg-[#dedede] absolute right-0 top-1/2 -translate-y-1/2 -rotate-90 {% endif %} {% if section.settings.slider_arrow == 'top_left'%} bg-[#dedede] absolute left-0 top-1/2 -translate-y-1/2 -rotate-90 {% endif %}"
+                            aria-label="next slide"
+                        >
+                            {% if section.settings.slider_arrow == 'center' %}
+                              <span class="w-10 h-10 block">
+                                {% render 'otsb-icon-alls', icon: 'icon-arrow'%}
+                              </span>
+                            {% else %}
+                              <span class="w-6 h-6 block">
+                                {% render 'otsb-icon-alls', icon: 'icon-caret'%}
+                              </span>
+                            {% endif %}
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

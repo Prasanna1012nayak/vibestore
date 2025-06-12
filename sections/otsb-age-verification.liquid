@@ -1,0 +1,577 @@
+{% render 'otsb-age-verification-base' %}
+{% schema %}
+{
+  "name": "OT: Age verification",
+  "tag": "section",
+  "class": "otsb__root section-age-verification-popup",
+  "limit": 1,
+  "disabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "min": 32,
+      "max": 128,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo size",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Popup side image"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_mobile",
+      "label": "Show on mobile",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "side_image_position",
+      "label": "Desktop Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "desk_image_size",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "label": "Desktop image size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_size",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "label": "Mobile image size",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "edges_type",
+      "options": [
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "rounded_corners",
+          "label": "Rounded corners"
+        }
+      ],
+      "default": "rounded_corners",
+      "label": "Edges"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center",
+      "label": "Content alignment"
+    },
+    {
+      "type": "range",
+      "id": "reappear_after",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "day",
+      "info": "The number of days before a dismissed popup reappears.",
+      "label": "Reappear after",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Styles"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_height_mobile",
+      "label": "Use custom height on mobile",
+      "default": false,
+      "info": "When popup side image is shown and has size, the popup could be displayed with a height that is too large when the content is short. Enable this option to set a custom height on mobile if the content is too short."
+    },
+    {
+      "type": "range",
+      "id": "custom_height_mobile",
+      "min": 25,
+      "max": 100,
+      "unit": "%",
+      "label": "Custom height on mobile",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_height_desktop",
+      "label": "Use custom height on desktop",
+      "default": false,
+      "info": "Same as the mobile option, but for desktop."
+    },
+    {
+      "type": "range",
+      "id": "custom_height_desktop",
+      "min": 25,
+      "max": 100,
+      "unit": "%",
+      "label": "Custom height on desktop",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "default": "#FFFFFF",
+      "label": "Background color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "use_custom_font",
+          "label": "Use custom font",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Confirm your age",
+          "label": "Heading"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "%",
+          "label": "Heading size",
+          "default": 100
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_custom_font",
+          "label": "Custom font",
+          "default": "instrument_sans_n4"
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Please verify that you are 18 years of age or older to enter this site.</p>",
+          "label": "Text"
+        },
+        {
+          "type": "range",
+          "id": "text_size",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "%",
+          "label": "Text size",
+          "default": 100
+        },
+        {
+          "type": "font_picker",
+          "id": "text_custom_font",
+          "label": "Custom font",
+          "default": "instrument_sans_n4"
+        },
+        {
+          "type": "header",
+          "content": "Additional Info"
+        },
+        {
+          "type": "richtext",
+          "id": "additional_info",
+          "label": "Text",
+          "default": "<p><em>By entering this website, you certify that you are 18+ enough</em></p>"
+        },
+        {
+          "type": "range",
+          "id": "additional_info_size",
+          "min": 50,
+          "max": 200,
+          "step": 10,
+          "unit": "%",
+          "label": "Size",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "additional_info_margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin Top",
+          "default": 10
+        },
+        {
+          "type": "font_picker",
+          "id": "additional_info_custom_font",
+          "label": "Custom font",
+          "default": "instrument_sans_n4"
+        },
+        {
+          "type": "header",
+          "content": "Color"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "default": "#000000",
+          "label": "Heading"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "default": "#000000",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "text_link_color",
+          "default": "#FFA725",
+          "label": "Text link"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Decline Button"
+        },
+        {
+          "type": "text",
+          "id": "decline_button_label",
+          "default": "Disagree",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "decline_button_link",
+          "label": "Redirect link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_primary_decline",
+          "default": false,
+          "label": "Show as primary button"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_new_window",
+          "default": false,
+          "label": "Open this link in a new window"
+        },
+        {
+          "type": "header",
+          "content": "Underage message"
+        },
+        {
+          "type": "text",
+          "label": "Underage Message",
+          "id": "underage_message",
+          "default": "You are not old enough to view this content."
+        },
+        {
+          "type": "range",
+          "id": "underage_message_bg_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "%",
+          "label": "Background opacity",
+          "default": 80
+        },
+        {
+          "type": "color",
+          "id": "underage_message_color",
+          "default": "#FFFFFF",
+          "label": "Color"
+        },
+        {
+          "type": "color",
+          "id": "underage_message_bg_color",
+          "default": "#121212",
+          "label": "Background color"
+        },
+        {
+          "type": "header",
+          "content": "Accept Button"
+        },
+        {
+          "type": "text",
+          "id": "accept_button_label",
+          "default": "Agree",
+          "label": "Label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_primary_accept",
+          "default": true,
+          "label": "Show as primary button"
+        },
+        {
+          "type": "header",
+          "content": "Button Design"
+        },
+        {
+          "type": "select",
+          "id": "button_type",
+          "options": [
+            {
+              "value": "square",
+              "label": "Square"
+            },
+            {
+              "value": "rounded",
+              "label": "Rounded"
+            },
+            {
+              "value": "rounded_corners",
+              "label": "Rounded Corners"
+            },
+            {
+              "value": "mixed",
+              "label": "Mixed"
+            }
+          ],
+          "label": "Button style",
+          "default": "rounded_corners"
+        },
+        {
+          "type": "select",
+          "id": "button_color_mobile",
+          "options": [
+            {
+              "value": "hover",
+              "label": "Use button hover color"
+            },
+            {
+              "value": "color",
+              "label": "Use button color"
+            }
+          ],
+          "label": "Mobile primary button style",
+          "default": "color"
+        },
+        {
+          "type": "select",
+          "id": "button_animation",
+          "options": [
+            {
+              "value": "slide",
+              "label": "Slide"
+            },
+            {
+              "value": "fill_up",
+              "label": "Fill up"
+            },
+            {
+              "value": "sliced",
+              "label": "Sliced with icon"
+            },
+            {
+              "value": "underline",
+              "label": "Underline"
+            }
+          ],
+          "label": "Primary button hover animation",
+          "default": "fill_up"
+        },
+        {
+          "type": "html",
+          "id": "custom_icon_button",
+          "label": "Custom icon (SVG code)",
+          "info": "Applies to 'Sliced with icon' animation type. For assistance with custom SVG code or fixing issues that arise from custom SVG code, please [contact our support](https://omnithemes.com/contact/)."
+        },
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "desk_margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "Desktop Margin Top",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "desk_margin_bottom",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "Desktop Margin Bottom",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mobile_margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "Mobile Margin Top",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "mobile_margin_bottom",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "label": "Mobile Margin Bottom",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "color_button",
+          "label": "Button",
+          "default": "#FD8E16"
+        },
+        {
+          "type": "color",
+          "id": "color_text_button",
+          "label": "Button text",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "color_button_hover",
+          "label": "Button hover",
+          "default": "#6b7050"
+        },
+        {
+          "type": "color",
+          "id": "color_text_button_hover",
+          "label": "Button text hover",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "color_button_secondary",
+          "label": "Secondary button",
+          "default": "rgba(0,0,0,0)"
+        },
+        {
+          "type": "color",
+          "id": "secondary_button_text",
+          "default": "#444444",
+          "label": "Secondary button text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "OT: Age verification",
+      "blocks": [
+        {
+          "type": "content"
+        },
+        {
+          "type": "buttons"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

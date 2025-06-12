@@ -1211,6 +1211,81 @@
         "border_position": "both",
         "color_scheme": ""
       }
+    },
+    "otsb_age_verification_PHRqKf": {
+      "type": "otsb-age-verification",
+      "blocks": {
+        "content_kxmhgP": {
+          "type": "content",
+          "settings": {
+            "use_custom_font": false,
+            "heading": "Confirm your age",
+            "heading_size": 100,
+            "heading_custom_font": "instrument_sans_n4",
+            "text": "<p>Please verify that you are 18 years of age or older to enter this site.</p>",
+            "text_size": 100,
+            "text_custom_font": "instrument_sans_n4",
+            "additional_info": "<p><em>By entering this website, you certify that you are 18+ enough</em></p>",
+            "additional_info_size": 100,
+            "additional_info_margin_top": 10,
+            "additional_info_custom_font": "instrument_sans_n4",
+            "heading_color": "#000000",
+            "text_color": "#000000",
+            "text_link_color": "#FFA725"
+          }
+        },
+        "buttons_rgYKed": {
+          "type": "buttons",
+          "settings": {
+            "decline_button_label": "Disagree",
+            "decline_button_link": "",
+            "button_primary_decline": false,
+            "open_new_window": false,
+            "underage_message": "You are not old enough to view this content.",
+            "underage_message_bg_opacity": 80,
+            "underage_message_color": "#FFFFFF",
+            "underage_message_bg_color": "#121212",
+            "accept_button_label": "Agree",
+            "button_primary_accept": true,
+            "button_type": "rounded_corners",
+            "button_color_mobile": "color",
+            "button_animation": "fill_up",
+            "custom_icon_button": "",
+            "desk_margin_top": 20,
+            "desk_margin_bottom": 0,
+            "mobile_margin_top": 10,
+            "mobile_margin_bottom": 0,
+            "color_button": "#FD8E16",
+            "color_text_button": "#FFFFFF",
+            "color_button_hover": "#6b7050",
+            "color_text_button_hover": "#FFFFFF",
+            "color_button_secondary": "rgba(0,0,0,0)",
+            "secondary_button_text": "#444444"
+          }
+        }
+      },
+      "block_order": [
+        "content_kxmhgP",
+        "buttons_rgYKed"
+      ],
+      "name": "OT: Age verification",
+      "settings": {
+        "overlay_color": "#000",
+        "overlay_opacity": 80,
+        "logo_size": 64,
+        "show_image_mobile": true,
+        "side_image_position": "right",
+        "desk_image_size": 40,
+        "mobile_image_size": 40,
+        "edges_type": "rounded_corners",
+        "content_alignment": "center",
+        "reappear_after": 7,
+        "use_custom_height_mobile": false,
+        "custom_height_mobile": 50,
+        "use_custom_height_desktop": false,
+        "custom_height_desktop": 50,
+        "background_color": "#FFFFFF"
+      }
     }
   },
   "order": [
@@ -1232,6 +1307,7 @@
     "feature_list",
     "testimonials",
     "icon_list",
-    "featured_blog"
+    "featured_blog",
+    "otsb_age_verification_PHRqKf"
   ]
 }
